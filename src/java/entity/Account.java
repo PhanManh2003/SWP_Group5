@@ -4,6 +4,7 @@
  */
 package entity;
 
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,5 +22,9 @@ import lombok.ToString;
 @Setter
 
 public class Account {
-    
+    private String accountID;
+    private String email;
+    private String role;
+    private String status;
+    private Date lastLogin;
 }
