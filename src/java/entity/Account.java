@@ -22,9 +22,11 @@ import lombok.ToString;
 @Setter
 
 public class Account {
-    private String accountID;
+    private int accountID;
     private String email;
+    private String password;
     private String role;
     private String status;
+    private String accountStatus;
     private Date lastLogin;
 }

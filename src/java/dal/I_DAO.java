@@ -15,7 +15,7 @@ public interface I_DAO<T> {
     
     public List<T> findAll();
     
-    public T findById(T t);
+    public T findByLogin(T t);
     
     public boolean update(T t);
     

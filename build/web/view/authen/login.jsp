@@ -14,7 +14,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>SkillGro - Online Courses & Education Template</title>
+    <title>Online Courses & Education Template</title>
     <meta name="description" content="SkillGro - Online Courses & Education Template">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -338,6 +338,7 @@
         <!-- breadcrumb-area-end -->
 
         <!-- singUp-area -->
+        <div style="color: red">${error}</div>
         <section class="singUp-area section-py-120">
             <div class="container">
                 <div class="row justify-content-center">
@@ -354,14 +355,14 @@
                             <div class="account__divider">
                                 <span>or</span>
                             </div>
-                            <form action="#" class="account__form">
+                            <form action="authen" class="account__form" method="POST">
                                 <div class="form-grp">
                                     <label for="email">Email</label>
-                                    <input id="email" type="text" placeholder="email">
+                                    <input id="email" name="email" type="text" placeholder="email">
                                 </div>
                                 <div class="form-grp">
                                     <label for="password">Password</label>
-                                    <input id="password" type="text" placeholder="password">
+                                    <input id="password" name="password" type="text" placeholder="password">
                                 </div>
                                 <div class="account__check">
                                     <div class="account__check-remember">
