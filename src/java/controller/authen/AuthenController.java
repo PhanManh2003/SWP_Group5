@@ -4,6 +4,7 @@
  */
 package controller.authen;
 
+import config.GlobalConfig;
 import dal.AccountDAO;
 import entity.Account;
 import jakarta.servlet.ServletException;
@@ -11,54 +12,86 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
+import utils.MD5PasswordEncoderUtils;
 
 public class AuthenController extends HttpServlet {
+
+    AccountDAO accountDAO = new AccountDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //get ve action
+        String action = request.getParameter("action") != null
+                ? request.getParameter("action")
+                : "";
+        //dua theo action set URL trang can chuyen den
+        String url;
+        switch (action) {
+            case "login":
+                url = "view/authen/login.jsp";
+                break;
+            case "log-out":
+                url = logOut(request, response);
+                break;
+            default:
+                url = "view/authen/login.jsp";
+        }
+
+        //chuyen trang
+        request.getRequestDispatcher(url).forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        response.getWriter().println("Servlet");
-//        // Get data từ form đăng nhập
-//        String email = request.getParameter("email");
-//        String password = request.getParameter("password");
-//        Account account = new Account(0, email, password, null,
-//                null, null, null);
-//        // Tìm kiếm với AccountDAO
-//        AccountDAO dao = new AccountDAO();
-//
-//        if (dao.findByLogin(account) != null) {
-//            request.getRequestDispatcher("SWP_OCMS/view/homepage/home.jsp")
-//                    .forward(request, response);
-//        } else {
-//            request.setAttribute("error", "Invalid username or password!");
-//            request.getRequestDispatcher("SWP_OCMS/view/authen/login.jsp")
-//                    .forward(request, response);
-//        }
+        //get ve action
+        String action = request.getParameter("action") != null
+                ? request.getParameter("action")
+                : "";
+        //dựa theo action để xử lí request
+        String url;
+        switch (action) {
+            case "login":
+                url = loginDoPost(request, response);
+                break;
+            default:
+                url = "home";
+        }
+        request.getRequestDispatcher(url).forward(request, response);
+
     }
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet AuthenController</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet AuthenController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+    private String logOut(HttpServletRequest request, HttpServletResponse response) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    private String loginDoPost(HttpServletRequest request, HttpServletResponse response) {
+        String url = null;
+        //get về các thong tin người dufg nhập
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        //kiểm tra thông tin có tồn tại trong DB ko
+        Account account = Account.builder()
+                .email(email)
+                .password(MD5PasswordEncoderUtils.encodeMD5(password))
+                .build();
+        Account accFoundByUsernamePass = accountDAO.findByEmailAndPass(account);
+        //true => trang home ( set account vao trong session ) 
+        if (accFoundByUsernamePass != null) {
+            request.getSession().setAttribute(GlobalConfig.SESSION_ACCOUNT,
+                    accFoundByUsernamePass);
+            url = "home";
+            //false => quay tro lai trang login ( set them thong bao loi )
+        } else {
+            request.setAttribute("error", "Username or password incorrect!!");
+            url = "view/authen/login.jsp";
+        }
+        return url;
+    }
+
+
+
+  
 
 }

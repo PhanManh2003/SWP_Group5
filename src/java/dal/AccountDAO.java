@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -5,10 +6,9 @@
 package dal;
 
 import entity.Account;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
@@ -18,56 +18,63 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
 
     @Override
     public List<Account> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Account findByLogin(Account t) {
-        String sql = "SELECT * FROM dbo.Account WHERE [Email]"
-                + " = ? AND [Password] = ?";
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            statement = connection.prepareStatement(sql);
-            statement.setObject(1, t.getEmail());
-            statement.setObject(2, t.getPassword());
-            rs = statement.executeQuery();
-            if (rs.next()) {
-                Account account = new Account();
-                account.setEmail(rs.getString("Email"));
-                account.setPassword(rs.getString("Password"));
-                return account;
+        List<Account> accounts = new ArrayList<>();
+        String sql = "SELECT * FROM dbo.Account";
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+                ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
+                accounts.add(getFromResultSet(rs));
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
+        }
+        return accounts;
+    }
+
+    @Override
+    public Account getFromResultSet(ResultSet resultSet) throws SQLException {
+        Account account = new Account();
+        account.setAccountID(resultSet.getInt("AccountID"));
+        account.setEmail(resultSet.getString("Email"));
+        account.setPassword(resultSet.getString("Password"));
+        account.setRole(resultSet.getString("Role"));
+        account.setStatus(resultSet.getString("Status"));
+        account.setAccountStatus(resultSet.getString("AccountStatus"));
+        account.setLastLogin(resultSet.getDate("LastLogin"));
+        return account;
+    }
+
+    public Account findByEmailAndPass(Account t) {
+        String sql = "SELECT * FROM dbo.Account WHERE [Email] = ? AND [Password] = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, t.getEmail());
+            statement.setString(2, t.getPassword());
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return getFromResultSet(rs);
                 }
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         }
         return null;
     }
 
-    @Override
-    public boolean update(Account t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+    public static void main(String[] args) {
+        AccountDAO accountDAO = new AccountDAO();
+
+        // Test the findByEmailAndPass method
+        Account account = new Account();
+        account.setEmail("john.doe@email.com");
+        account.setPassword("hashed_password_1");
+        Account foundAccount = accountDAO.findByEmailAndPass(account);
+        if (foundAccount != null) {
+            System.out.println("Found account: " + foundAccount.getEmail());
+        } else {
+            System.out.println("Account not found");
+        }
     }
 
-    @Override
-    public boolean delete(Account t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int insert(Account t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
 }
