@@ -59,7 +59,18 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return null;
     }
-
+public boolean updatePassword(Account account) {
+        String sql = "UPDATE dbo.Account SET Password = ? WHERE Email = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, account.getPassword());
+            statement.setString(2, account.getEmail());
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException ex) {
+            System.out.println("Error updating password: " + ex.getMessage());
+            return false;
+        }
+    }
 
     public static void main(String[] args) {
         AccountDAO accountDAO = new AccountDAO();

@@ -11,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import utils.MD5PasswordEncoderUtils;
 
@@ -88,6 +89,31 @@ public class AuthenController extends HttpServlet {
             url = "view/authen/login.jsp";
         }
         return url;
+    }
+private String resetPassword(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        String email = (String) session.getAttribute("email");
+        String newPassword = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
+
+        if (!newPassword.equals(confirmPassword)) {
+            request.setAttribute("error", "Passwords do not match.");
+            return "view/authen/resetPassword.jsp";
+        }
+
+        Account account = Account.builder()
+                .email(email)
+                .password(MD5PasswordEncoderUtils.encodeMD5(newPassword))
+                .build();
+
+        boolean updated = accountDAO.updatePassword(account);
+        if (updated) {
+            request.setAttribute("message", "Your password has been successfully reset.");
+            return "view/authen/login.jsp";
+        } else {
+            request.setAttribute("error", "Failed to reset password. Please try again.");
+            return "view/authen/resetPassword.jsp";
+        }
     }
 
 
