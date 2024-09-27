@@ -28,5 +28,6 @@ public class Account {
     private String role;
     private String status;
     private String accountStatus;
+    private boolean gender;
     private Date lastLogin;
 }

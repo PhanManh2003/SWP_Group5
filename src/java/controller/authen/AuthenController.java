@@ -1,13 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
+
 package controller.authen;
 
 import config.GlobalConfig;
 import dal.AccountDAO;
 import entity.Account;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +14,7 @@ import java.io.IOException;
 import utils.EmailUtils;
 import utils.MD5PasswordEncoderUtils;
 
+@WebServlet(name = "AuthenController", urlPatterns = {"/authen"})
 public class AuthenController extends HttpServlet {
 
     AccountDAO accountDAO = new AccountDAO();
@@ -69,6 +68,12 @@ public class AuthenController extends HttpServlet {
             case "verify-otp":
                 url = verifyOTP(request, response);
                 break;
+            case "forgot-password":
+                url = forgotPassword(request, response);
+                break;
+            case "reset-password":
+                url = resetPassword(request, response);
+                break;
             default:
                 url = "home";
         }
@@ -77,7 +82,8 @@ public class AuthenController extends HttpServlet {
     }
 
     private String logOut(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        request.getSession().removeAttribute(GlobalConfig.SESSION_ACCOUNT);
+        return "home";
     }
 
     private String loginDoPost(HttpServletRequest request, HttpServletResponse response) {
@@ -180,6 +186,37 @@ public class AuthenController extends HttpServlet {
         }
     }
 
+    private String forgotPassword(HttpServletRequest request, HttpServletResponse response) {
+        String url;
+        String email = request.getParameter("email");
+
+        // Kiểm tra xem email có tồn tại trong cơ sở dữ liệu không
+        Account account = Account.builder().email(email).build();
+        Account foundAccount = accountDAO.findByEmail(account);
+
+        if (foundAccount == null) {
+            // Email không tìm thấy trong cơ sở dữ liệu
+            request.setAttribute("error", "No account found with this email address.");
+            url = "view/authen/enterEmailForgotPassword.jsp";
+            return url;
+        }
+
+        // Gửi OTP
+        HttpSession session = request.getSession();
+        String otp = EmailUtils.sendOTPMail(email);
+
+        // Lưu thông tin vào session
+        session.setAttribute("otp", otp);
+        session.setAttribute("email", email);
+        session.setAttribute("otp_purpose", "password_reset");
+        session.setAttribute("account_id", foundAccount.getAccountID());
+
+        // Đặt thời gian hết hạn cho session (ví dụ: 15 phút)
+        session.setMaxInactiveInterval(15 * 60);
+
+        url = "view/authen/verifyOTP.jsp";
+        return url;
+    }
 
     private String handleAccountActivation(HttpServletRequest request, HttpSession session) {
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
