@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import utils.EmailUtils;
 import utils.MD5PasswordEncoderUtils;
 
 public class AuthenController extends HttpServlet {
@@ -90,7 +91,7 @@ public class AuthenController extends HttpServlet {
         }
         return url;
     }
-private String resetPassword(HttpServletRequest request, HttpServletResponse response) {
+    private String resetPassword(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
         String newPassword = request.getParameter("newPassword");
@@ -116,7 +117,37 @@ private String resetPassword(HttpServletRequest request, HttpServletResponse res
         }
     }
 
+    private String forgotPassword(HttpServletRequest request, HttpServletResponse response) {
+        String url;
+        String email = request.getParameter("email");
 
+        // Kiểm tra xem email có tồn tại trong cơ sở dữ liệu không
+        Account account = Account.builder().email(email).build();
+        Account foundAccount = accountDAO.findByEmail(account);
+
+        if (foundAccount == null) {
+            // Email không tìm thấy trong cơ sở dữ liệu
+            request.setAttribute("error", "No account found with this email address.");
+            url = "view/authen/enterEmailForgotPassword.jsp";
+            return url;
+        }
+
+        // Gửi OTP
+        HttpSession session = request.getSession();
+        String otp = EmailUtils.sendOTPMail(email);
+
+        // Lưu thông tin vào session
+        session.setAttribute("otp", otp);
+        session.setAttribute("email", email);
+        session.setAttribute("otp_purpose", "password_reset");
+        session.setAttribute("account_id", foundAccount.getAccountID());
+
+        // Đặt thời gian hết hạn cho session (ví dụ: 15 phút)
+        session.setMaxInactiveInterval(15 * 60);
+
+        url = "view/authen/verifyOTP.jsp";
+        return url;
+    }
 
   
 

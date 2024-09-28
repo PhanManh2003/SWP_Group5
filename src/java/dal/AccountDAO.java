@@ -20,8 +20,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     public List<Account> findAll() {
         List<Account> accounts = new ArrayList<>();
         String sql = "SELECT * FROM dbo.Account";
-        try (PreparedStatement statement = connection.prepareStatement(sql);
-                ResultSet rs = statement.executeQuery()) {
+        try (PreparedStatement statement = connection.prepareStatement(sql); ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
                 accounts.add(getFromResultSet(rs));
             }
@@ -59,7 +58,38 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return null;
     }
-public boolean updatePassword(Account account) {
+
+    public Account findByEmail(Account t) {
+        String sql = "SELECT * FROM dbo.Account WHERE [Email] = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, t.getEmail());
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return getFromResultSet(rs);
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+
+    public boolean activateAccount(int accountId) {
+        String sql = "UPDATE dbo.Account SET Status = 'Active' WHERE AccountID = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, accountId);
+
+            int affectedRows = statement.executeUpdate();
+
+            return affectedRows > 0;
+        } catch (SQLException ex) {
+            System.out.println("Error activating account: " + ex.getMessage());
+            return false;
+        }
+    }
+
+    public boolean updatePassword(Account account) {
         String sql = "UPDATE dbo.Account SET Password = ? WHERE Email = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, account.getPassword());
@@ -86,6 +116,5 @@ public boolean updatePassword(Account account) {
             System.out.println("Account not found");
         }
     }
-
 
 }
