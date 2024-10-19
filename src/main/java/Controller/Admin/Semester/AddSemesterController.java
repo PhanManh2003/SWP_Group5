@@ -2,30 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller.Admin.Class;
+package Controller.Admin.Semester;
 
-import DAO.ClassDAO;
-import DAO.CourseDAO;
 import DAO.SemesterDAO;
-import DAO.TeacherDAO;
-import Model.ClassInfo;
-import Model.Course;
 import Model.Semester;
-import Model.Teacher;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  *
  * @author HP
  */
-public class AddClassController extends HttpServlet {
+@WebServlet(name = "AddSemesterController", urlPatterns = {"/AddSemesterController"})
+public class AddSemesterController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +39,10 @@ public class AddClassController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddClassController</title>");
+            out.println("<title>Servlet AddSemesterController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AddClassController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AddSemesterController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,19 +60,7 @@ public class AddClassController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        TeacherDAO teacherDAO = new TeacherDAO();
-        CourseDAO courseDAO = new CourseDAO();
-        SemesterDAO semesterDAO = new SemesterDAO();
-
-        List<Teacher> teachers = teacherDAO.getAllTeachers();
-        List<Course> courses = courseDAO.getAllCourses();
-        List<Semester> semesters = semesterDAO.getAllSemesters();
-
-        request.setAttribute("semesters", semesters);
-        request.setAttribute("teachers", teachers);
-        request.setAttribute("courses", courses);
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/class/add.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/semester/add.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -92,37 +75,54 @@ public class AddClassController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String className = request.getParameter("className");
-        int status = Integer.parseInt(request.getParameter("status"));
-        int teacherID = Integer.parseInt(request.getParameter("teacherID"));
-        int courseID = Integer.parseInt(request.getParameter("courseID"));
-        int semesterID = Integer.parseInt(request.getParameter("semesterID"));
+        String semesterName = request.getParameter("semesterName").trim();
+        String yearStr = request.getParameter("year").trim();
+        String statusStr = request.getParameter("status").trim();
 
-        if (className == null || className.trim().isEmpty()) {
-            response.sendRedirect("AddClassController?error=Class name can not empty");
+        if (semesterName == null || semesterName.isEmpty() || yearStr == null || yearStr.isEmpty() || statusStr == null || statusStr.isEmpty()) {
+            request.setAttribute("errorMessage", "All fields are required.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/semester/add.jsp");
+            dispatcher.forward(request, response);
             return;
         }
 
-        ClassDAO classDao = new ClassDAO();
-        if (classDao.getExistClass(0, className)) {
-            response.sendRedirect("AddClassController?error=Class name is exist");
+        int year;
+        int status;
+
+        try {
+            year = Integer.parseInt(yearStr);
+        } catch (NumberFormatException e) {
+            request.setAttribute("errorMessage", "Year must be a valid number.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/semester/add.jsp");
+            dispatcher.forward(request, response);
             return;
         }
 
-        ClassInfo classInfo = new ClassInfo();
-        classInfo.setClassName(className);
-        classInfo.setStatus(status);
-        classInfo.setTeacherID(teacherID);
-        classInfo.setCourseID(courseID);
-        classInfo.setSemesterID(semesterID);
-
-        int result = classDao.addClass(classInfo);
-
-        if (result > 0) {
-            response.sendRedirect("ListClassController?success=Add successfully");
-        } else {
-            response.sendRedirect("AddClassController?error=Add fail");
+        try {
+            status = Integer.parseInt(statusStr);
+        } catch (NumberFormatException e) {
+            request.setAttribute("errorMessage", "Status must be a valid number.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/semester/add.jsp");
+            dispatcher.forward(request, response);
+            return;
         }
+        SemesterDAO semesterDAO = new SemesterDAO();
+
+        if (semesterDAO.getSemesterName(semesterName, 0)) {
+            request.setAttribute("errorMessage", "Name semester is exist in system.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/semester/add.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+
+        Semester semester = new Semester();
+        semester.setSemesterName(semesterName);
+        semester.setYear(year);
+        semester.setStatus(status);
+
+        semesterDAO.addSemester(semester);
+
+        response.sendRedirect("ListSemestersController?success=Add successfully");
     }
 
     /**
