@@ -16,6 +16,7 @@ public class Admin {
     private String phone;
     private String password;
     private int status;
+    private String avatar;
 
     public Admin() {
     }
@@ -76,4 +77,13 @@ public class Admin {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+    
 }
