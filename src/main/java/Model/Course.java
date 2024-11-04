@@ -5,6 +5,8 @@
 
 package Model;
 
+import java.util.List;
+
 /**
  *
  * @author HP
@@ -14,6 +16,8 @@ public class Course {
     private String courseName;
     private String courseCode;
     private int status;
+    private List<StudentLession> studentLession;
+    private List<Lession> lession;
 
     public Course() {
     }
@@ -57,5 +61,19 @@ public class Course {
         this.status = status;
     }
 
-    
+    public List<StudentLession> getStudentLession() {
+        return studentLession;
+    }
+
+    public void setStudentLession(List<StudentLession> studentLession) {
+        this.studentLession = studentLession;
+    }
+
+    public List<Lession> getLession() {
+        return lession;
+    }
+
+    public void setLession(List<Lession> lession) {
+        this.lession = lession;
+    }
 }

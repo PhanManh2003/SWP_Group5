@@ -13,6 +13,7 @@ public class Lession {
     private String docsLink;
     private String description;
     private String status;
+    private StudentLession studentLession;
     
     public Lession() {
     }
@@ -82,6 +83,14 @@ public class Lession {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public StudentLession getStudentLession() {
+        return studentLession;
+    }
+
+    public void setStudentLession(StudentLession studentLession) {
+        this.studentLession = studentLession;
     }
 }
 

@@ -15,6 +15,7 @@ public class Teacher {
     private String email;
     private String phone;
     private int status;
+    private String avatar;
 
     // Getters and Setters
     public int getTeacherID() {
@@ -55,5 +56,13 @@ public class Teacher {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
