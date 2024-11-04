@@ -91,7 +91,7 @@ public class StudentClassController extends HttpServlet {
                         StudentClass studentJoin = studentClassDao.getStudentsByClassIdAndStudent(classIdIn, studentId);
                         request.setAttribute("studentJoin", studentJoin);
                         request.setAttribute("currentClass", currentClass);
-                        request.getRequestDispatcher("./student/class/view.jsp").forward(request, response);
+                        request.getRequestDispatcher("./view/student/class/view.jsp").forward(request, response);
                     } else {
                         response.sendRedirect("StudentClassController?error=Can not found class");
                     }
@@ -141,7 +141,7 @@ public class StudentClassController extends HttpServlet {
                         List<Assignment> assignments = assignmentDao.getAllAssignmentsByClassIdActive(classIdIn);
                         request.setAttribute("assignments", assignments);
                         request.setAttribute("currentClass", currentClass);
-                        request.getRequestDispatcher("./student/assignment/list.jsp").forward(request, response);
+                        request.getRequestDispatcher("./view/student/assignment/list.jsp").forward(request, response);
                     } else {
                         response.sendRedirect("StudentClassController?error=Can not found class");
                     }
@@ -153,12 +153,12 @@ public class StudentClassController extends HttpServlet {
                     request.setAttribute("joined", "joined");
                     List<ClassInfo> classInforJoined = classDao.getAllClassesActiveJoin(studentId);
                     request.setAttribute("classInfors", classInforJoined);
-                    request.getRequestDispatcher("./student/class/class.jsp").forward(request, response);
+                    request.getRequestDispatcher("./view/student/class/class.jsp").forward(request, response);
                     break;
                 default:
                     List<ClassInfo> classInfors = classDao.getAllClassesActive();
                     request.setAttribute("classInfors", classInfors);
-                    request.getRequestDispatcher("./student/class/class.jsp").forward(request, response);
+                    request.getRequestDispatcher("./view/student/class/class.jsp").forward(request, response);
                     break;
             }
         } else {

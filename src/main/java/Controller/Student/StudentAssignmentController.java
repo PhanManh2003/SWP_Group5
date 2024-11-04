@@ -122,11 +122,11 @@ public class StudentAssignmentController extends HttpServlet {
                                     request.setAttribute("currentClass", currentClass);
                                     request.setAttribute("studentLogin", studentLogin);
                                     request.setAttribute("assignment", ass);
-                                    request.getRequestDispatcher("./student/assignment/submit.jsp").forward(request, response);
+                                    request.getRequestDispatcher("./view/student/assignment/submit.jsp").forward(request, response);
                                 } else {
                                     request.setAttribute("currentClass", currentClass);
                                     request.setAttribute("currentSubmit", submit);
-                                    request.getRequestDispatcher("./student/assignment/edit-submit.jsp").forward(request, response);
+                                    request.getRequestDispatcher("./view/student/assignment/edit-submit.jsp").forward(request, response);
                                 }
                             }
                         } else {
@@ -159,7 +159,7 @@ public class StudentAssignmentController extends HttpServlet {
                                 request.setAttribute("studentLogin", studentLogin);
                                 request.setAttribute("assignment", ass);
                                 request.setAttribute("submit", submit);
-                                request.getRequestDispatcher("./student/assignment/view-submit.jsp").forward(request, response);
+                                request.getRequestDispatcher("./view/student/assignment/view-submit.jsp").forward(request, response);
                             }
                         } else {
                             response.sendRedirect("StudentClassController?action=view&classID=" + classId + "&error=Please join to class to submit");

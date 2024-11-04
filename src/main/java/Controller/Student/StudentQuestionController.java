@@ -168,7 +168,7 @@ public class StudentQuestionController extends HttpServlet {
             List<Question> listQuestions = questionDAO.getAllQuestionsByClassIdByStudent(classIdNumber);
             request.setAttribute("listQuestions", listQuestions);
             request.setAttribute("classId", classIdNumber);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("./student/question/question-list.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./view/student/question/question-list.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             System.out.println("Error: " + e);
@@ -187,7 +187,7 @@ public class StudentQuestionController extends HttpServlet {
             Question existingQuestion = questionDAO.getQuestion(id);
             request.setAttribute("answers", answers);
             request.setAttribute("classId", classIdNumber);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("./student/question/answers.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./view/student/question/answers.jsp");
             request.setAttribute("question", existingQuestion);
             dispatcher.forward(request, response);
         } catch (Exception e) {
