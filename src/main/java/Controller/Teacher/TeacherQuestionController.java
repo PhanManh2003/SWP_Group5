@@ -86,7 +86,7 @@ public class TeacherQuestionController extends HttpServlet {
             List<Question> listQuestions = questionDAO.getAllQuestionsByClassId(classIdNumber);
             request.setAttribute("listQuestions", listQuestions);
             request.setAttribute("classId", classIdNumber);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("./teacher/question/question-list.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./view/teacher/question/question-list.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             System.out.println("Error: " + e);
@@ -105,7 +105,7 @@ public class TeacherQuestionController extends HttpServlet {
             Question existingQuestion = questionDAO.getQuestion(id);
             request.setAttribute("answers", answers);
             request.setAttribute("classId", classIdNumber);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("./teacher/question/answers.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./view/teacher/question/answers.jsp");
             request.setAttribute("question", existingQuestion);
             dispatcher.forward(request, response);
         } catch (Exception e) {
@@ -120,7 +120,7 @@ public class TeacherQuestionController extends HttpServlet {
         try {
             int classIdNumber = Integer.parseInt(classId);
             request.setAttribute("classId", classIdNumber);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("./teacher/question/question-form.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./view/teacher/question/question-form.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             System.out.println("Error: " + e);
@@ -136,7 +136,7 @@ public class TeacherQuestionController extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("id"));
             Question existingQuestion = questionDAO.getQuestion(id);
             request.setAttribute("classId", classIdNumber);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("./teacher/question/question-form.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./view/teacher/question/question-form.jsp");
             request.setAttribute("question", existingQuestion);
             dispatcher.forward(request, response);
         } catch (Exception e) {

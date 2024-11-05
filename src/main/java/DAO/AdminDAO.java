@@ -13,10 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author HP
- */
 public class AdminDAO {
 
     private Connection conn;

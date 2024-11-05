@@ -2,8 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller.Lib;
+package Controller.Teacher;
 
+import DAO.ClassDAO;
+import DAO.StudentDAO;
+import DAO.TeacherDAO;
+import Model.ClassInfo;
+import Model.Student;
+import Model.Teacher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,15 +17,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
+import jakarta.servlet.http.HttpSession;
+import java.util.List;
 
-
-@WebServlet(name = "FileDownloadController", urlPatterns = {"/FileDownloadController"})
-public class FileDownloadController extends HttpServlet {
-
-    private static final long serialVersionUID = 1L;
+/**
+ *
+ * @author HP
+ */
+@WebServlet(name = "TeacherLessionController", urlPatterns = {"/TeacherLessionController"})
+public class TeacherLessionController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,15 +39,15 @@ public class FileDownloadController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet FileDownloadController</title>");
+            out.println("<title>Servlet TeacherLessionController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet FileDownloadController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet TeacherLessionController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,37 +65,35 @@ public class FileDownloadController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String fileName = request.getParameter("file");
-        String applicationPath = request.getServletContext().getRealPath("");
-        String filePath = applicationPath + fileName;
-        File downloadFile = new File(filePath);
-        if (downloadFile.exists()) {
-            try ( FileInputStream inStream = new FileInputStream(downloadFile)) {
-
-                String mimeType = getServletContext().getMimeType(filePath);
-                if (mimeType == null) {
-                    mimeType = "application/octet-stream";
+        HttpSession session = request.getSession();
+        int idTeacher = session.getAttribute("teacherID") == null ? -1 : (int) session.getAttribute("teacherID");
+        TeacherDAO teacherDAO = new TeacherDAO();
+        Teacher teacherLogin = teacherDAO.getTeacher(idTeacher);
+        if (session.getAttribute("teacherID") == null || teacherLogin == null) {
+            response.sendRedirect("LoginController?error=Your account can not login here");
+            return;
+        }
+        ClassDAO classDao = new ClassDAO();
+        if (teacherLogin != null) {
+            try {
+                String classId = request.getParameter("classID");
+                int classIdIn = Integer.parseInt(classId);
+                ClassInfo currentClass = classDao.getClasseActiveByTeacherById(classIdIn);
+                if (currentClass != null) {
+                    StudentDAO studentDao = new StudentDAO();
+                    List<Student> students = studentDao.getAllStudentsByClass(classIdIn);
+                    request.setAttribute("students", students);
+                    request.setAttribute("currentClass", currentClass);
+                    request.getRequestDispatcher("./view/teacher/class/view.jsp").forward(request, response);
+                } else {
+                    response.sendRedirect("TeacherClassController?error=Can not found class");
                 }
-                response.setContentType(mimeType);
-                response.setContentLength((int) downloadFile.length());
-
-                // Thiết lập các thông tin trong header
-                String headerKey = "Content-Disposition";
-                String headerValue = String.format("attachment; filename=\"%s\"", downloadFile.getName());
-                response.setHeader(headerKey, headerValue);
-
-                // Lấy output stream của response để ghi file
-                OutputStream outStream = response.getOutputStream();
-
-                byte[] buffer = new byte[4096];
-                int bytesRead = -1;
-
-                while ((bytesRead = inStream.read(buffer)) != -1) {
-                    outStream.write(buffer, 0, bytesRead);
-                }
+            } catch (Exception e) {
+                response.sendRedirect("TeacherClassController?error=ID class invalid");
             }
+
         } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "File not found.");
+            response.sendRedirect("LoginController");
         }
     }
 

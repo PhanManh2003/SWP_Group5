@@ -22,10 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
-/**
- *
- * @author HP
- */
+
 @WebServlet(name = "StudentClassController", urlPatterns = {"/StudentClassController"})
 public class StudentClassController extends HttpServlet {
 

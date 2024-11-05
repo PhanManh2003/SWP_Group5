@@ -1,8 +1,4 @@
-<%-- 
-    Document   : answers
-    Created on : Jul 17, 2024, 9:00:46 PM
-    Author     : HP
---%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>

@@ -6,10 +6,6 @@ package Model;
 
 import java.sql.Timestamp;
 
-/**
- *
- * @author HP
- */
 public class Assignment {
 
     private int assignmentID;

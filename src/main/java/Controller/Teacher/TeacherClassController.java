@@ -91,7 +91,7 @@ public class TeacherClassController extends HttpServlet {
                         List<Student> students = studentDao.getAllStudentsByClass(classIdIn);
                         request.setAttribute("students", students);
                         request.setAttribute("currentClass", currentClass);
-                        request.getRequestDispatcher("./teacher/class/view.jsp").forward(request, response);
+                        request.getRequestDispatcher("./view/teacher/class/view.jsp").forward(request, response);
                     } else {
                         response.sendRedirect("TeacherClassController?error=Can not found class");
                     }
@@ -109,7 +109,7 @@ public class TeacherClassController extends HttpServlet {
                         List<Assignment> assignments = assignmentDao.getAllAssignmentsByClassId(classIdIn);
                         request.setAttribute("assignments", assignments);
                         request.setAttribute("currentClass", currentClass);
-                        request.getRequestDispatcher("./teacher/class/assignment.jsp").forward(request, response);
+                        request.getRequestDispatcher("./view/teacher/class/assignment.jsp").forward(request, response);
                     } else {
                         response.sendRedirect("TeacherClassController?error=Can not found class");
                     }
@@ -125,7 +125,7 @@ public class TeacherClassController extends HttpServlet {
                     ClassInfo currentClass = classDao.getClasseActiveByTeacherById(classIdIn);
                     if (currentClass != null) {
                         request.setAttribute("classId", classId);
-                        request.getRequestDispatcher("./teacher/class/add-student.jsp").forward(request, response);
+                        request.getRequestDispatcher("./view/teacher/class/add-student.jsp").forward(request, response);
                     } else {
                         response.sendRedirect("TeacherClassController?error=Can not found class");
                     }
@@ -137,7 +137,7 @@ public class TeacherClassController extends HttpServlet {
                 default:
                     List<ClassInfo> classInfos = classDao.getClasseActiveByTeacher(idTeacher);
                     request.setAttribute("classes", classInfos);
-                    request.getRequestDispatcher("./teacher/class/list.jsp").forward(request, response);
+                    request.getRequestDispatcher("./view/teacher/class/list.jsp").forward(request, response);
             }
 
         } else {
@@ -238,14 +238,14 @@ public class TeacherClassController extends HttpServlet {
             if (classIDString == null || email == null || classIDString.isEmpty() || email.isEmpty()) {
                 request.setAttribute("errorMessage", "Class ID and email are required");
                 request.setAttribute("classId", classIDString);
-                request.getRequestDispatcher("./teacher/class/add-student.jsp").forward(request, response);
+                request.getRequestDispatcher("./view/teacher/class/add-student.jsp").forward(request, response);
                 return;
             }
 
             if (!this.isValidEmail(email)) {
                 request.setAttribute("errorMessage", "Email is not valid");
                 request.setAttribute("classId", classIDString);
-                request.getRequestDispatcher("./teacher/class/add-student.jsp").forward(request, response);
+                request.getRequestDispatcher("./view/teacher/class/add-student.jsp").forward(request, response);
                 return;
             }
 
@@ -255,7 +255,7 @@ public class TeacherClassController extends HttpServlet {
             } catch (NumberFormatException e) {
                 request.setAttribute("errorMessage", "Class ID is not valid");
                 request.setAttribute("classId", classIDString);
-                request.getRequestDispatcher("./teacher/class/add-student.jsp").forward(request, response);
+                request.getRequestDispatcher("./view/teacher/class/add-student.jsp").forward(request, response);
                 return;
             }
 
@@ -271,7 +271,7 @@ public class TeacherClassController extends HttpServlet {
             if (student == null) {
                 request.setAttribute("errorMessage", "Student is not exist in system");
                 request.setAttribute("classId", classIDString);
-                request.getRequestDispatcher("./teacher/class/add-student.jsp").forward(request, response);
+                request.getRequestDispatcher("./view/teacher/class/add-student.jsp").forward(request, response);
             }
 
             if (studentClassDao.getStudentsByClassIdAndStudent(classID, student.getStudentID()) != null) {

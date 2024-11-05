@@ -1,8 +1,4 @@
-<%-- 
-    Document   : list
-    Created on : Jun 7, 2024, 11:54:49 AM
-    Author     : HP
---%>
+
 
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>

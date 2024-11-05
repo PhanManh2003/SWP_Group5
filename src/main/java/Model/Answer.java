@@ -7,10 +7,6 @@ package Model;
 import java.sql.Timestamp;
 import java.util.List;
 
-/**
- *
- * @author HP
- */
 public class Answer {
 
     private int id;

@@ -5,10 +5,6 @@
 
 package Model;
 
-/**
- *
- * @author HP
- */
 public class Question {
     private int id;
     private String question;

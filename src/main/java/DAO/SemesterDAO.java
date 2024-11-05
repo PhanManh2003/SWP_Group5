@@ -13,10 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author HP
- */
+
 public class SemesterDAO {
 
     private Connection conn;

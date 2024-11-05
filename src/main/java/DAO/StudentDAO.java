@@ -14,10 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.Timestamp;
 
-/**
- *
- * @author HP
- */
+
 public class StudentDAO {
 
     private Connection conn;

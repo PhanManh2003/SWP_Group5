@@ -1,8 +1,4 @@
-<%-- 
-    Document   : list-question
-    Created on : Jul 17, 2024, 9:14:05 PM
-    Author     : HP
---%>
+
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>

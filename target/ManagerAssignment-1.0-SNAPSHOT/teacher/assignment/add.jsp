@@ -1,8 +1,4 @@
-<%-- 
-    Document   : add
-    Created on : Jun 11, 2024, 1:38:31 AM
-    Author     : HP
---%>
+
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>

@@ -4,10 +4,6 @@
  */
 package DAO;
 
-/**
- *
- * @author HP
- */
 import DBConnection.DBConnection;
 import Model.Question;
 import java.sql.*;

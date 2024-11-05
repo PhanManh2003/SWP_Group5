@@ -14,10 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-/**
- *
- * @author HP
- */
+
 @WebServlet(name="StudentLogoutController", urlPatterns={"/StudentLogoutController"})
 public class StudentLogoutController extends HttpServlet {
    

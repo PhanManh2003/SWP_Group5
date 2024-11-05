@@ -92,7 +92,7 @@ public class TeacherAssignmentController extends HttpServlet {
                     ClassInfo currentClass = classDao.getClass(classId);
                     if (currentClass != null) {
                         request.setAttribute("classInfo", currentClass);
-                        request.getRequestDispatcher("./teacher/assignment/add.jsp").forward(request, response);
+                        request.getRequestDispatcher("./view/teacher/assignment/add.jsp").forward(request, response);
                     } else {
                         response.sendRedirect("TeacherClassController?error=Can not found class");
                     }
@@ -108,7 +108,7 @@ public class TeacherAssignmentController extends HttpServlet {
                             Assignment assignment = assignmentDao.getAssignmentByTeacher(assignmentIdNumber, teacherLogin.getTeacherID());
                             if (assignment != null) {
                                 request.setAttribute("assignment", assignment);
-                                request.getRequestDispatcher("./teacher/assignment/edit.jsp").forward(request, response);
+                                request.getRequestDispatcher("./view/teacher/assignment/edit.jsp").forward(request, response);
                                 return;
                             } else {
                                 response.sendRedirect("TeacherClassController?error=Can not found assignment");
@@ -130,7 +130,7 @@ public class TeacherAssignmentController extends HttpServlet {
                                 List<Submission> submissions = submitDao.listAllSubmissionsByTeacher(assignment.getAssignmentID());
                                 request.setAttribute("submissions", submissions);
                                 request.setAttribute("assignment", assignment);
-                                request.getRequestDispatcher("./teacher/assignment/submission.jsp").forward(request, response);
+                                request.getRequestDispatcher("./view/teacher/assignment/submission.jsp").forward(request, response);
                             } else {
                                 response.sendRedirect("TeacherClassController?error=Can not found assignment");
                             }
@@ -155,7 +155,7 @@ public class TeacherAssignmentController extends HttpServlet {
                             if (assignment != null) {
                                 request.setAttribute("submission", submitCurrent);
                                 request.setAttribute("assignment", assignment);
-                                request.getRequestDispatcher("./teacher/assignment/grade.jsp").forward(request, response);
+                                request.getRequestDispatcher("./view/teacher/assignment/grade.jsp").forward(request, response);
                             } else {
                                 response.sendRedirect("TeacherClassController?error=Can not this submission");
                             }
@@ -169,7 +169,7 @@ public class TeacherAssignmentController extends HttpServlet {
                 default:
                     List<Assignment> assignments = assignmentDao.getAllAssignmentsByteacherId(teacherLogin.getTeacherID());
                     request.setAttribute("assignments", assignments);
-                    request.getRequestDispatcher("./teacher/assignment/list.jsp").forward(request, response);
+                    request.getRequestDispatcher("./view/teacher/assignment/list.jsp").forward(request, response);
                     break;
             }
         } else {
@@ -255,21 +255,21 @@ public class TeacherAssignmentController extends HttpServlet {
                     if (title == null || desc == null || dueDateString == null || typeString == null || statusString == null) {
                         request.setAttribute("classInfo", currentClass);
                         request.setAttribute("errorMessage", "Please enter full fill");
-                        request.getRequestDispatcher("./teacher/assignment/add.jsp").forward(request, response);
+                        request.getRequestDispatcher("./view/teacher/assignment/add.jsp").forward(request, response);
                         return;
                     }
 
                     if (desc.length() == 0) {
                         request.setAttribute("classInfo", currentClass);
                         request.setAttribute("errorMessage", "Description can not empty.");
-                        request.getRequestDispatcher("./teacher/assignment/add.jsp").forward(request, response);
+                        request.getRequestDispatcher("./view/teacher/assignment/add.jsp").forward(request, response);
                         return;
                     }
 
                     if (title.length() == 0) {
                         request.setAttribute("classInfo", currentClass);
                         request.setAttribute("errorMessage", "Title can not empty.");
-                        request.getRequestDispatcher("./teacher/assignment/add.jsp").forward(request, response);
+                        request.getRequestDispatcher("./view/teacher/assignment/add.jsp").forward(request, response);
                         return;
                     }
                     AssignmentDAO assignmentDao = new AssignmentDAO();
@@ -281,7 +281,7 @@ public class TeacherAssignmentController extends HttpServlet {
                         if (now.isAfter(dateTime)) {
                             request.setAttribute("classInfo", currentClass);
                             request.setAttribute("errorMessage", "Due date must be from now.");
-                            request.getRequestDispatcher("./teacher/assignment/add.jsp").forward(request, response);
+                            request.getRequestDispatcher("./view/teacher/assignment/add.jsp").forward(request, response);
                             return;
                         }
                         int type = Integer.parseInt(typeString);
@@ -296,7 +296,7 @@ public class TeacherAssignmentController extends HttpServlet {
                     } catch (Exception e) {
                         request.setAttribute("classInfo", currentClass);
                         request.setAttribute("errorMessage", "Please choose a valid data.");
-                        request.getRequestDispatcher("./teacher/assignment/add.jsp").forward(request, response);
+                        request.getRequestDispatcher("./view/teacher/assignment/add.jsp").forward(request, response);
                         return;
                     }
 
@@ -397,7 +397,7 @@ public class TeacherAssignmentController extends HttpServlet {
     private void handleError(String errorMessage, HttpServletRequest request, HttpServletResponse response) {
         try {
             request.setAttribute("errorMessage", errorMessage);
-            request.getRequestDispatcher("./teacher/assignment/edit.jsp").forward(request, response);
+            request.getRequestDispatcher("./view/teacher/assignment/edit.jsp").forward(request, response);
         } catch (Exception e) {
             System.out.println("error: " + e);
         }

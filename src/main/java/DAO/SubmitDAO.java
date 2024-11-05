@@ -15,10 +15,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author HP
- */
+
 public class SubmitDAO {
 
     private Connection conn;

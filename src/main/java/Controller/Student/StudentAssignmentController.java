@@ -30,10 +30,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
-/**
- *
- * @author HP
- */
+
 @WebServlet(name = "StudentAssignmentController", urlPatterns = {"/StudentAssignmentController"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
         maxFileSize = 1024 * 1024 * 10, // 10MB

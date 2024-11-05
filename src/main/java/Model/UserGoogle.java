@@ -4,10 +4,6 @@
  */
 package Model;
 
-/**
- *
- * @author HP
- */
 public class UserGoogle {
 
     private String id;

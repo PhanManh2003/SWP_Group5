@@ -5,10 +5,6 @@
 
 package Model;
 
-/**
- *
- * @author HP
- */
 public class Slot {
     private int id;
     private int slot;

@@ -4,10 +4,6 @@
  */
 package Model;
 
-/**
- *
- * @author HP
- */
 public class Semester {
 
     private int semesterID;

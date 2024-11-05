@@ -1,8 +1,4 @@
-<%-- 
-    Document   : view
-    Created on : Jun 11, 2024, 12:10:20 PM
-    Author     : HP
---%>
+
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>

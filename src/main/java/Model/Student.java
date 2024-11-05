@@ -7,10 +7,7 @@ package Model;
 
 import java.sql.Timestamp;
 
-/**
- *
- * @author HP
- */
+
 public class Student {
     private int studentID;
     private String name;

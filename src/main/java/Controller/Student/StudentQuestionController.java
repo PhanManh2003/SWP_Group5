@@ -24,10 +24,7 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.List;
 
-/**
- *
- * @author HP
- */
+
 @WebServlet(name = "StudentQuestionController", urlPatterns = {"/student-question"})
 public class StudentQuestionController extends HttpServlet {
 
