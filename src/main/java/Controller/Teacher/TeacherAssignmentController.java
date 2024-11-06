@@ -27,10 +27,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-/**
- *
- * @author HP
- */
 public class TeacherAssignmentController extends HttpServlet {
 
     /**
