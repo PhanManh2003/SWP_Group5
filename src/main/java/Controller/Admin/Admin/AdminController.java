@@ -5,6 +5,8 @@
 package Controller.Admin.Admin;
 
 import DAO.AdminDAO;
+import DAO.StudentDAO;
+import DAO.TeacherDAO;
 import Model.Admin;
 import Utils.Validation;
 import java.io.IOException;
@@ -17,7 +19,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
-
+/**
+ *
+ * @author HP
+ */
 @WebServlet(name = "AdminController", urlPatterns = {"/AdminController"})
 public class AdminController extends HttpServlet {
 
@@ -153,6 +158,7 @@ public class AdminController extends HttpServlet {
 
     private void editAdmin(HttpServletRequest request, HttpServletResponse response) {
         try {
+            TeacherDAO teacherDao = new TeacherDAO();
             String idAdmin = request.getParameter("idAdmin").trim();
             String name = request.getParameter("name").trim();
             String email = request.getParameter("email").trim();
@@ -174,6 +180,9 @@ public class AdminController extends HttpServlet {
 
             if (password.length() == 0) {
                 password = request.getParameter("oldPassword");
+            } else if (!password.equals(request.getParameter("confirm-password"))) {
+                response.sendRedirect("AdminController?action=edit&adminID=" + idAdmin + "&error=Confirm password  is not valid");
+                return;
             }
             int status;
 
@@ -186,6 +195,16 @@ public class AdminController extends HttpServlet {
             Validation validate = new Validation();
             if (!validate.isValidEmail(email)) {
                 response.sendRedirect("AdminController?action=edit&adminID=" + idAdmin + "&error=Invalid email");
+                return;
+            }
+            
+            if (teacherDao.isEmailExists(email,0)) {
+                response.sendRedirect("AdminController?action=edit&adminID=" + idAdmin + "&error=Email is exist in system");
+                return;
+            }
+            StudentDAO studentDao = new StudentDAO();
+            if (studentDao.isEmailExists(email,0)) {
+                response.sendRedirect("AdminController?action=edit&adminID=" + idAdmin + "&error=Email is exist in system");
                 return;
             }
 
@@ -205,13 +224,13 @@ public class AdminController extends HttpServlet {
                 return;
             }
             if (adminDao.isPhoneExists(phone, idAdminNumber)) {
-                response.sendRedirect("AdminController?action=edit&adminID=" + idAdmin + "&error=Ehone exists");
+                response.sendRedirect("AdminController?action=edit&adminID=" + idAdmin + "&error=Phone exists");
                 return;
             }
             Admin admin = new Admin(idAdminNumber, name, email, phone, password, status);
             int result = adminDao.updateAdmin(admin);
             if (result > 0) {
-                if(request.getParameter("type") != null) {
+                if (request.getParameter("type") != null) {
                     response.sendRedirect("AdminController?action=update-profile&success=Update successfully");
                 } else {
                     response.sendRedirect("AdminController?success=Update successfully");
@@ -250,14 +269,30 @@ public class AdminController extends HttpServlet {
                 response.sendRedirect("AdminController?action=add&error=Invalid email");
                 return;
             }
-
+            TeacherDAO teacherDao = new TeacherDAO();
+            if (teacherDao.isEmailExists(email, 0)) {
+                response.sendRedirect("AdminController?action=add&error=Email is exist in system");
+                return;
+            }
+            
+            StudentDAO studentDao = new StudentDAO();
+            if (studentDao.isEmailExists(email, 0)) {
+                response.sendRedirect("AdminController?action=add&error=Email is exist in system");
+                return;
+            }
+            
             if (!validate.isValidPhoneNumber(phone)) {
                 response.sendRedirect("AdminController?action=add&error=Invalid phone");
                 return;
             }
 
             if (!(password.length() > 7) || password.contains(" ")) {
-                response.sendRedirect("AdminController?action=add&error=Password must be from 8 character and no space");
+                response.sendRedirect("AdminController?action=add&error=Password must be from 8 characters, contains number, lower and upper character and special character");
+                return;
+            }
+            
+            if(!validatePassword(password).equals(""))  {
+                response.sendRedirect("AdminController?action=add&error=Password must be from 8 characters, contains number, lower and upper character and special character");
                 return;
             }
 
@@ -267,7 +302,7 @@ public class AdminController extends HttpServlet {
                 return;
             }
             if (adminDao.isPhoneExists(phone, 0)) {
-                response.sendRedirect("AdminController?action=add&error=Ehone exists");
+                response.sendRedirect("AdminController?action=add&error=Phone exists");
                 return;
             }
             Admin admin = new Admin(0, name, email, phone, password, status);
@@ -280,6 +315,30 @@ public class AdminController extends HttpServlet {
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
+    }
+
+    private String validatePassword(String password) {
+        // Kiểm tra độ dài tối đa 8 ký tự
+        if (password.length() < 8) {
+            return "Password must have at least 8 characters.";
+        }
+        // Kiểm tra có ít nhất một chữ cái viết hoa
+        if (!password.matches(".*[A-Z].*")) {
+            return "Password must contain at least one uppercase letter.";
+        }
+        // Kiểm tra có ít nhất một chữ cái viết thường
+        if (!password.matches(".*[a-z].*")) {
+            return "Password must contain at least one lowercase letter.";
+        }
+        // Kiểm tra có ít nhất một chữ số
+        if (!password.matches(".*[0-9].*")) {
+            return "Password must contain at least one number.";
+        }
+        // Kiểm tra có ít nhất một ký tự đặc biệt
+        if (!password.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) {
+            return "Password must contain at least one special character.";
+        }
+        return ""; // Không có lỗi
     }
 
     /**

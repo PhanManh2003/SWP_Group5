@@ -4,19 +4,21 @@
     Author     : HP
 --%>
 
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Edit admin</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    </head>
-    <body>
-        <%@include file="../component/header.jsp" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:include page="../../commonAdmin/head.jsp"></jsp:include>
         <div class="container mt-5">
             <h2 class="mb-4">Update Admin</h2>
+            <c:if test="${param.error != null}">
+        <div class="alert alert-danger" role="alert">
+            ${param.error}
+        </div>
+    </c:if>
+    <c:if test="${param.success != null}">
+        <div class="alert alert-success" role="alert">
+            ${param.success}
+        </div>
+    </c:if>
             <form action="AdminController?action=edit" method="post">
                 <div class="form-group">
                     <label for="name">Name:</label>
@@ -25,7 +27,7 @@
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" class="form-control" id="email" name="email" value="${currentAdmin.email}" required>
+                    <input type="text"  readonly="" type="email" class="form-control" id="email" name="email" value="${currentAdmin.email}" required>
                 </div>
                 <div class="form-group">
                     <label for="phone">Phone:</label>
@@ -37,6 +39,10 @@
                     <input type="hidden" value="${currentAdmin.password}" name="oldPassword"/>
                 </div>
                 <div class="form-group">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" class="form-control" id="confirm-password" name="confirm-password">
+                </div>
+                <div class="form-group">
                     <label for="status">Status:</label>
                     <select class="form-control" id="status" name="status">
                         <option value="1" ${currentAdmin.status == 1 ? "selected" : ""}>Active</option>
@@ -46,5 +52,4 @@
                 <button type="submit" class="btn btn-primary">Update Admin</button>
             </form>
         </div>
-    </body>
-</html>
+<%@include file="../../commonAdmin/footer.jsp" %>

@@ -4,19 +4,9 @@
     Author     : HP
 --%>
 
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Add New Admin</title>
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    </head>
-    <body>
-        <%@include file="../component/header.jsp" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:include page="../../commonAdmin/head.jsp"></jsp:include>
         <div class="container mt-5">
             <h2 class="mb-4">Add New Admin</h2>
             <c:if test="${param.error != null}">
@@ -57,8 +47,4 @@
                 <button type="submit" class="btn btn-primary">Add Admin</button>
             </form>
         </div>
-        <!-- Bootstrap JS -->
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </body>
-</html>
-
+<%@include file="../../commonAdmin/footer.jsp" %>
