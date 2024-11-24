@@ -68,7 +68,7 @@ public class DeleteSemesterController extends HttpServlet {
         if(result > 0) {
             response.sendRedirect("ListSemestersController?success=Delete successfully");
         } else {
-            response.sendRedirect("ListSemestersController?error=Delete fail. Semester have class in this");
+            response.sendRedirect("ListSemestersController?error=Delete fail. Semester have class in this.");
         }  
     } 
 

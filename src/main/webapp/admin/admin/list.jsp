@@ -19,7 +19,7 @@
             ${param.success}
         </div>
     </c:if>
-    <table class="table" id="data-table">
+    <table class="table" id="lessionTable">
         <thead class="thead-dark">
             <tr>
                 <th>ID</th>

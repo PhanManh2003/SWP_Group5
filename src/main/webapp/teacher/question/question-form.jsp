@@ -1,14 +1,10 @@
-
+<%-- 
+    Document   : question-form
+    Created on : Jul 17, 2024, 7:27:46 PM
+    Author     : HP
+--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Question Form</title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body>
-        <%@ include file="../component/header.jsp" %>
+<jsp:include page="../../commonTeacher/head.jsp"></jsp:include>
         <div class="container">
             <h2>${question == null ? 'Add New Question' : 'Edit Question'}</h2>
             <form action="teacher-question" method="post">
@@ -40,5 +36,4 @@
                 <a href="teacher-question" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
-    </body>
-</html>
+     <%@include file="../../commonTeacher/footer.jsp" %>

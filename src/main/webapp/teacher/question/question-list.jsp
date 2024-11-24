@@ -1,15 +1,11 @@
-
+<%-- 
+    Document   : question-list
+    Created on : Jul 17, 2024, 7:26:42 PM
+    Author     : HP
+--%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Questions List</title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body>
-        <%@ include file="../component/header.jsp" %>
+<jsp:include page="../../commonTeacher/head.jsp"></jsp:include>
         <div class="container">
             <h2>Questions List</h2>
             <a href="teacher-question?action=new&classID=${classId}" class="btn btn-primary">Add New Question</a>
@@ -42,5 +38,4 @@
                 </tbody>
             </table>
         </div>
-    </body>
-</html>
+     <%@include file="../../commonTeacher/footer.jsp" %>

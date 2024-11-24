@@ -4,17 +4,10 @@
     Author     : HP
 --%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Edit Semester</title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body>
-        <%@ include file="../component/header.jsp" %>
+
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:include page="../../commonAdmin/head.jsp"></jsp:include>
         <div class="container">
             <h2>Edit Semester</h2>
             <c:if test="${param.error != null}">
@@ -46,7 +39,6 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Update Semester</button>
             </form>
-            <a href="ListSemestersServlet" class="btn btn-secondary">Back to List</a>
+            <a href="ListSemestersController" class="btn btn-secondary">Back to List</a>
         </div>
-    </body>
-</html>
+   <%@include file="../../commonAdmin/footer.jsp" %>

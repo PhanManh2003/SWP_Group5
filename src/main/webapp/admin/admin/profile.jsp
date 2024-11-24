@@ -36,6 +36,10 @@
                             <input type="text" class="form-control" id="phone" name="phone" value="${currentAdmin.phone}" required>
                         </div>
                         <div class="form-group">
+                            <label for="old-password">Old Password:</label>
+                            <input type="password" class="form-control" id="old-password" name="old-password">
+                        </div>
+                        <div class="form-group">
                             <label for="password">Password:</label>
                             <input type="password" class="form-control" id="password" name="password">
                             <input type="hidden" value="${currentAdmin.password}" name="oldPassword"/>

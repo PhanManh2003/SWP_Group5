@@ -4,17 +4,9 @@
     Author     : HP
 --%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Add Semester</title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body>
-        <%@ include file="../component/header.jsp" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:include page="../../commonAdmin/head.jsp"></jsp:include>
         <div class="container">
             <h2>Add Semester</h2>
             <span class="badge badge-danger">${errorMessage}</span>
@@ -43,6 +35,4 @@
             </form>
             <a href="ListSemestersController" class="btn btn-secondary">Back to List</a>
         </div>
-    </body>
-</html>
-
+<%@include file="../../commonAdmin/footer.jsp" %>

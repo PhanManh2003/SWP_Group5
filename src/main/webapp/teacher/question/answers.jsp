@@ -1,21 +1,12 @@
-
+<%-- 
+    Document   : answers
+    Created on : Jul 17, 2024, 9:00:46 PM
+    Author     : HP
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Answer Details</title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-            .card-body {
-                padding: 1.25rem;
-            }
-        </style>
-    </head>
-    <body>
-        <%@ include file="../component/header.jsp" %>
+<jsp:include page="../../commonTeacher/head.jsp"></jsp:include>
         <div class="container">
             <h2>Answer Details</h2>
 
@@ -56,6 +47,4 @@
             </c:forEach>
             <a href="teacher-question?action=list&classID=${classId}" class="btn btn-secondary mt-4">Back to Questions List</a>
         </div>
-    </body>
-</html>
-
+      <%@include file="../../commonTeacher/footer.jsp" %>
