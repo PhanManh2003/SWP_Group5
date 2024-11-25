@@ -12,7 +12,7 @@
             .container {
                 margin-top: 50px;
             }
-                     .custom-modal {
+            .custom-modal {
                 display: none;
                 position: fixed;
                 z-index: 1000;
@@ -48,10 +48,10 @@
     </head>
     <body>
         <%@ include file="../../commonStudent/head.jsp" %>
-        
+
         <div class="container">
             <h2 class="mb-4">List of Assignments for ${currentClass.className}</h2>
-            
+
             <!-- Hiển thị thông báo -->
             <div class="mt-3">
                 <c:if test="${param.error != null}">
@@ -65,7 +65,9 @@
                     </div>
                 </c:if>
             </div>
-
+            <div class="alert alert-warning mt-3">
+                <strong>Important:</strong> ZIP files submitted will be stored and cannot be deleted until the end of the course. Please ensure your submission is correct before submitting.
+            </div>
             <!-- Hiển thị bảng danh sách assignments -->
             <table class="table table-bordered">
                 <thead>
@@ -86,6 +88,7 @@
                         <tr>
                             <td>${status.index + 1}</td>
                             <td>${assign.title}</td>
+                            <!-- Lấy ngày giao -->
                             <td>
                                 ${getActiveAssignment.getAssignmentBadge(assign.dueDate)}
                             </td>
@@ -93,7 +96,7 @@
                                 <span class="badge badge-secondary">${currentClass.className}</span>
                             </td>
                             <td>
-                                <span class="badge badge-info">${teacher.name}</span>
+                                <span class="badge badge-info">${assign.teacher != null ? assign.teacher.name : "NULL"}</span>
                             </td>
                             <td>
                                 <span class="badge badge-success">
@@ -116,24 +119,27 @@
                                 <c:if test="${getActiveAssignment.getAssignmentIsDue(assign.dueDate) == false}">
                                     <a href="StudentAssignmentController?action=submit&classID=${assign.classID}&assignmentID=${assign.assignmentID}" class="btn btn-info btn-sm">Submit</a>
                                 </c:if>
+
                                 <a href="StudentAssignmentController?action=view-submition&classID=${assign.classID}&assignmentID=${assign.assignmentID}" class="btn btn-primary btn-sm">View Submission</a>
-                                    <button type="button" class="btn btn-primary" onclick="openModal('modal${status.index}')">
+
+
+                                <button type="button" class="btn btn-primary" onclick="openModal('modal${status.index}')">
                                     View descriptions
                                 </button>
                             </td>
                         </tr>
-                         <div id="modal${status.index}" class="custom-modal">
+                    <div id="modal${status.index}" class="custom-modal">
                         <div class="modal-content">
                             <span class="close-modal" onclick="closeModal('modal${status.index}')">&times;</span>
-                            <h5>Desscriptions Assignment</h5>
+                            <h5>Descriptions Assignment</h5>
                             <p>${assign.description}</p>
                         </div>
                     </div>
-                    </c:forEach>
+                </c:forEach>
                 </tbody>
             </table>
         </div>
-<script>
+        <script>
             // Function to open modal
             function openModal(modalId) {
                 document.getElementById(modalId).style.display = 'flex';
@@ -145,7 +151,7 @@
             }
 
             // Close modal if clicking outside the modal content
-            window.onclick = function(event) {
+            window.onclick = function (event) {
                 const modals = document.getElementsByClassName('custom-modal');
                 for (let i = 0; i < modals.length; i++) {
                     if (event.target == modals[i]) {

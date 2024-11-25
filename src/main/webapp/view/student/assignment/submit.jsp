@@ -43,15 +43,20 @@
                 </div>
             </c:if>
 
-            <!-- Form nộp bài -->
+            <div class="alert alert-warning mt-3">
+                <strong>Important:</strong> Please ensure to keep a copy of your submission on your device. ZIP files submitted will be stored and cannot be accessed or deleted until the end of the course.
+            </div>
+
             <form action="StudentAssignmentController?action=submit" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
                 <input type="hidden" name="classID" value="${currentClass.classID}">
                 <input type="hidden" name="studentID" value="${studentLogin.studentID}">
                 <input type="hidden" name="assignmentID" value="${assignment.assignmentID}">
+                <!-- Lưu thông tin cùng tệp tải lên -->
 
                 <div class="form-group">
                     <label for="file">Choose a file to submit:</label>
                     <input class="form-control" type="file" id="file" name="file" accept=".zip" required>
+                    <!-- required đảm bảo phải chọn một tệp -->
                 </div>
 
                 <button class="btn btn-primary" type="submit">Submit</button>

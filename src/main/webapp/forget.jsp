@@ -1,4 +1,8 @@
-
+<%-- 
+    Document   : index
+    Created on : Jun 12, 2024, 12:03:04 AM
+    Author     : HP
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
@@ -13,6 +17,9 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6">
+                    <div class="text-center mt-5">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Logo_FPT_Education.png" width="200px" alt="Logo" class="logo">
+                    </div>
                     <div class="card mt-5">
                         <div class="card-body">
                             <h5 class="card-title text-center">Forget password for admin</h5>

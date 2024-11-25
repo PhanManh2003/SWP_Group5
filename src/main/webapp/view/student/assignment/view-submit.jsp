@@ -32,7 +32,9 @@
                     ${param.success}
                 </div>
             </c:if>
-
+            <div class="alert alert-warning mt-3">
+    <strong>Important:</strong> Please ensure to keep a copy of your submission on your device. ZIP files submitted will be stored and cannot be accessed or deleted until the end of the course.
+</div>
             <!-- Bảng hiển thị thông tin bài nộp -->
             <table class="table table-bordered">
                 <thead>

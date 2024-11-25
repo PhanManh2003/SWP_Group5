@@ -19,6 +19,8 @@ public class Student {
     private int status;
     private Timestamp joinAt;
     private int joinStatus;
+    private int adminID;
+    private Admin admin;
 
     // Getters and Setters
     public int getStudentID() {
@@ -76,4 +78,21 @@ public class Student {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    public int getAdminID() {
+        return adminID;
+    }
+
+    public void setAdminID(int adminID) {
+        this.adminID = adminID;
+    }
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
+    
 }

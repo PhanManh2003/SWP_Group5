@@ -41,6 +41,7 @@ public class TeacherDAO {
                 teacher.setEmail(resultSet.getString("Email"));
                 teacher.setPhone(resultSet.getString("Phone"));
                 teacher.setStatus(resultSet.getInt("Status"));
+                teacher.setAvatar(resultSet.getString("avatar"));
                 return teacher;
             }
         } catch (SQLException e) {
@@ -50,12 +51,13 @@ public class TeacherDAO {
     }
 
     public void addTeacher(Teacher teacher) {
-        String query = "INSERT INTO Teachers (Name, Email, Phone, Status) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO Teachers (Name, Email, Phone, Status, AdminID) VALUES (?, ?, ?, ?, ?)";
         try ( PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, teacher.getName());
             statement.setString(2, teacher.getEmail());
             statement.setString(3, teacher.getPhone());
             statement.setInt(4, teacher.getStatus());
+            statement.setInt(5, teacher.getAdminID());
             statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Add teacher: " + e);
@@ -74,6 +76,7 @@ public class TeacherDAO {
                 teacher.setEmail(resultSet.getString("Email"));
                 teacher.setPhone(resultSet.getString("Phone"));
                 teacher.setStatus(resultSet.getInt("Status"));
+                teacher.setAvatar(resultSet.getString("avatar"));
                 return teacher;
             }
         } catch (SQLException e) {
@@ -85,14 +88,20 @@ public class TeacherDAO {
     public List<Teacher> getAllTeachers() {
         List<Teacher> teachers = new ArrayList<>();
         String query = "SELECT * FROM Teachers";
+        ClassDAO classDao = new ClassDAO();
+        AdminDAO adminDao = new AdminDAO();
         try ( PreparedStatement statement = conn.prepareStatement(query);  ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Teacher teacher = new Teacher();
+                int teacherId = resultSet.getInt("TeacherID");
                 teacher.setTeacherID(resultSet.getInt("TeacherID"));
                 teacher.setName(resultSet.getString("Name"));
                 teacher.setEmail(resultSet.getString("Email"));
                 teacher.setPhone(resultSet.getString("Phone"));
                 teacher.setStatus(resultSet.getInt("Status"));
+                //Teacher đang trong class
+                teacher.setCanDelete(!classDao.getCheckClassByTeacherID(teacherId));
+                teacher.setAdmin(adminDao.getAdmin(resultSet.getInt("AdminID")));
                 teachers.add(teacher);
             }
         } catch (SQLException e) {
@@ -100,6 +109,23 @@ public class TeacherDAO {
         }
         return teachers;
     }
+    
+    public boolean updateAvatar(int teacherID, String avatarPath) {
+    String query = "UPDATE Teachers SET Avatar = ? WHERE TeacherID = ?";
+    
+    try (PreparedStatement statement = conn.prepareStatement(query)) {
+        statement.setString(1, avatarPath);  
+        statement.setInt(2, teacherID);     
+        
+        int rowsUpdated = statement.executeUpdate();
+        return rowsUpdated > 0;  
+    } catch (SQLException e) {
+        System.out.println("Update avatar error: " + e);
+    }
+    
+    return false;  
+}
+
 
     public void updateTeacher(Teacher teacher) {
         String query = "UPDATE Teachers SET Name = ?, Email = ?, Phone = ?, Status = ? WHERE TeacherID = ?";

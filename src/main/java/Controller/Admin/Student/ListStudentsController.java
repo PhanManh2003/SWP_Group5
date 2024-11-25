@@ -16,10 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
-/**
- *
- * @author HP
- */
+
 @WebServlet(name="ListStudentsController", urlPatterns={"/ListStudentsController"})
 public class ListStudentsController extends HttpServlet {
    
@@ -58,10 +55,11 @@ public class ListStudentsController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        //Lấy về toàn bộ thông tin students
         StudentDAO studentDAO = new StudentDAO();
         List<Student> students = studentDAO.getAllStudents();
         request.setAttribute("students", students);
-        request.getRequestDispatcher("./admin/student/list.jsp").forward(request, response);
+        request.getRequestDispatcher("./view/admin/student/list.jsp").forward(request, response);
     } 
 
     /** 

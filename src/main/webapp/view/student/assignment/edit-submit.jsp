@@ -50,10 +50,13 @@
                 <input type="hidden" class="form-control" id="submitID" name="submitID" required value="${currentSubmit.submissionID}">
                 <input type="hidden" class="form-control" id="assignmentId" name="assignmentID" required value="${currentSubmit.assignmentID}">
                 
+                <!-- Nộp file mới -->
                 <div class="form-group">
                     <label for="file">Choose a file to submit: </label>
                     <input type="file" class="form-control" id="file" name="file" accept=".zip" required>
                     <input type="hidden" class="form-control" name="oldSubmission" required value="${currentSubmit.submissionContent}">
+                    <!-- Lưu thông tin bài nộp cũ -->
+                   
                 </div>
                 
                 <!-- Hiển thị thông tin bài đã nộp trước đó nếu có -->

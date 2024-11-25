@@ -5,6 +5,8 @@
 
 package Model;
 
+import java.util.List;
+
 /**
  *
  * @author HP
@@ -14,6 +16,11 @@ public class Course {
     private String courseName;
     private String courseCode;
     private int status;
+    private List<StudentLession> studentLession;
+    private List<Lesson> lession;
+    private boolean canDelete;
+    private int adminID;
+    private Admin admin;
 
     public Course() {
     }
@@ -57,5 +64,44 @@ public class Course {
         this.status = status;
     }
 
+    public List<StudentLession> getStudentLession() {
+        return studentLession;
+    }
+
+    public void setStudentLession(List<StudentLession> studentLession) {
+        this.studentLession = studentLession;
+    }
+
+    public List<Lesson> getLession() {
+        return lession;
+    }
+
+    public void setLession(List<Lesson> lession) {
+        this.lession = lession;
+    }
+
+    public boolean isCanDelete() {
+        return canDelete;
+    }
+
+    public void setCanDelete(boolean canDelete) {
+        this.canDelete = canDelete;
+    }
+
+    public int getAdminID() {
+        return adminID;
+    }
+
+    public void setAdminID(int adminID) {
+        this.adminID = adminID;
+    }
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
     
 }

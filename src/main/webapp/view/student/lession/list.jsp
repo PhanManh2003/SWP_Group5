@@ -100,7 +100,7 @@
                     <div class="lesson-card <c:if test='${lession.studentLession != null}'>active-card</c:if>">
                         <!-- Display Active Badge if studentLession exists -->
                         <c:if test="${lession.studentLession != null}">
-                            <div class="status-badge">Active</div>
+                            <div class="status-badge">Completed</div>
                         </c:if>
 
                         <div class="lesson-title">
@@ -109,7 +109,7 @@
                         <p class="lesson-description">
                             ${lession.description}
                         </p>
-                        <a href="LessionStudentController?action=learn&lessionId=${lession.lessionId}" class="btn btn-primary">
+                        <a href="LessonStudentController?action=learn&lessionId=${lession.lessionId}" class="btn btn-primary">
                             <i class="fas fa-play-circle"></i> Start Learning
                         </a>
                     </div>

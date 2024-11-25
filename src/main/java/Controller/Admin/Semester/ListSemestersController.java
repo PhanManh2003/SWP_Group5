@@ -62,7 +62,7 @@ public class ListSemestersController extends HttpServlet {
         SemesterDAO semesterDAO = new SemesterDAO();
         List<Semester> semesters = semesterDAO.getAllSemesters();
         request.setAttribute("semesters", semesters);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/semester/list.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("./view/admin/semester/list.jsp");
         dispatcher.forward(request, response);
     } 
 

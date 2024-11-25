@@ -30,28 +30,18 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
-/**
- *
- * @author HP
- */
+
+//Cấu hình giới hạn servlet để upload file
 @WebServlet(name = "StudentAssignmentController", urlPatterns = {"/StudentAssignmentController"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
         maxFileSize = 1024 * 1024 * 10, // 10MB
         maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class StudentAssignmentController extends HttpServlet {
 
-    private String filePath = "/upload/submition/";
+    private String filePath = "/upload2/submition/";
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -69,26 +59,22 @@ public class StudentAssignmentController extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+  
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Kiểm tra đăng nhập
         HttpSession session = request.getSession();
         int studentId = session.getAttribute("studentID") == null ? -1 : (int) session.getAttribute("studentID");
+        //Lấy dữ liệu của student
         StudentDAO studentDao = new StudentDAO();
         Student studentLogin = studentDao.getStudent(studentId);
+        //Kiểm tra xem sinh viên có đăng nhập hay không
         if(session.getAttribute("studentID") == null || studentLogin == null) {
             response.sendRedirect("LoginController?error=Your account can not login here");
             return;
         }
+        //Khởi tạo đối tượng class,student,submit
         ClassDAO classDao = new ClassDAO();
         StudentClassDAO studentClassDao = new StudentClassDAO();
         SubmitDAO submitDao = new SubmitDAO();
@@ -98,25 +84,31 @@ public class StudentAssignmentController extends HttpServlet {
             switch (action) {
                 case "submit":
                     try {
+                    //Lấy classId, studentId
                     String classId = request.getParameter("classID");
                     String assignmentId = request.getParameter("assignmentID");
                     int classIdIn = Integer.parseInt(classId);
+                    //Kiểm tra class có student không
                     int assignmentIdNumber = Integer.parseInt(assignmentId);
                     ClassInfo currentClass = classDao.getClasseActiveByStudentById(classIdIn);
                     AssignmentDAO assignemtDao = new AssignmentDAO();
                     if (currentClass != null) {
+                        //Check điều kiện sinh viên tham gia lớp
                         StudentClass studentJoin = studentClassDao.getStudentsByClassIdAndStudent(currentClass.getClassID(), studentId);
                         if (studentJoin != null) {
+                            //Check asg tồn tạo và còn hạn
                             Assignment ass = assignemtDao.getAssignmentSubmit(assignmentIdNumber, currentClass.getClassID());
                             if (ass == null) {
                                 response.sendRedirect("StudentClassController?action=assignment&classID=" + classId + "&error=This assignment is not exist in this class");
                             } else {
+                                //Check điều kiện còn hạn
                                 LocalDateTime dueDate = ass.getDueDate().toLocalDateTime();
                                 LocalDateTime now = LocalDateTime.now();
                                 if (now.isAfter(dueDate)) {
                                     response.sendRedirect("StudentClassController?action=assignment&classID=" + classId + "&error=This assignment is expired");
                                     return;
                                 }
+                                //Check điều kiện xem đã nộp hay chưa
                                 Submission submit = submitDao.getSubmissionByassignment(ass.getAssignmentID(), studentId);
                                 if (submit == null) {
                                     request.setAttribute("currentClass", currentClass);
@@ -177,17 +169,11 @@ public class StudentAssignmentController extends HttpServlet {
         }
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+  
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Kiểm tra đăng nhập studentId còn trong session
         HttpSession session = request.getSession();
         int studentId = session.getAttribute("studentID") == null ? -1 : (int) session.getAttribute("studentID");
         StudentDAO studentDao = new StudentDAO();
@@ -207,12 +193,15 @@ public class StudentAssignmentController extends HttpServlet {
     private void handleFileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int classID = 0;
         try {
+            //Lấy thông tin class,student,asg
             classID = Integer.parseInt(request.getParameter("classID"));
             int studentID = Integer.parseInt(request.getParameter("studentID"));
             int assignmentID = Integer.parseInt(request.getParameter("assignmentID"));
+            //filePart file được tải lên
             Part filePart = request.getPart("file");
             String fileName = extractFileName(filePart);
-
+            
+            //Check điều kiện file
             if (!fileName.endsWith(".zip")) {
                 String message = "Only ZIP files are allowed!";
                 response.sendRedirect("StudentClassController?action=submit&classID=" + classID +"&assignmentID=" +assignmentID+ "&error=" + message);
@@ -224,12 +213,14 @@ public class StudentAssignmentController extends HttpServlet {
                 response.sendRedirect("StudentClassController?action=submit&classID=" + classID +"&assignmentID=" +assignmentID+ "&error=" + message);
                 return;
             }
-
+            
+            //Lưu file lên máy chủ lưu vào upload
             String uploadPath = getServletContext().getRealPath(filePath);
             Upload upload = new Upload();
             String namePathSaveDB = filePath + upload.uploadFile(filePart, uploadPath);
-
-            Timestamp submissionDate = Timestamp.from(Instant.now());
+            
+            //Lưu thông tin lên csdl
+            Timestamp submissionDate = Timestamp.from(Instant.now()); //Thời gian nộp
             SubmitDAO submitDao = new SubmitDAO();
             Submission submission = new Submission(0, namePathSaveDB, studentID, assignmentID, submissionDate, -1);
             boolean isSubmit = submitDao.addSubmission(submission);
@@ -250,13 +241,15 @@ public class StudentAssignmentController extends HttpServlet {
 
     private void handleEditFileUpload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         try {
+            //Lấy thông tin cũ 
             int classID = Integer.parseInt(request.getParameter("classID"));
             int submitId = Integer.parseInt(request.getParameter("submitID"));
             int studentID = Integer.parseInt(request.getParameter("studentID"));
             int assignmentID = Integer.parseInt(request.getParameter("assignmentID"));
             Part filePart = request.getPart("file");
             String fileName = extractFileName(filePart);
-
+            
+            //Kiểm tra kích thước và loại file
             if (!fileName.endsWith(".zip")) {
                 String message = "Only ZIP files are allowed!";
                 response.sendRedirect("StudentClassController?action=submit&classID=" + classID +"&assignmentID=" +assignmentID+ "&error=" + message);
@@ -268,14 +261,18 @@ public class StudentAssignmentController extends HttpServlet {
                 response.sendRedirect("StudentClassController?action=submit&classID=" + classID +"&assignmentID=" +assignmentID+ "&error=" + message);
                 return;
             }
-
+            
+            //Upload file mới
             Upload upload = new Upload();
             String uploadPath = getServletContext().getRealPath(filePath);
             String newFile = upload.uploadFile(filePart, uploadPath);
+            //Xử lý đường dẫn file
             String namePathSaveDB = filePath + newFile;
+
             if (newFile == null) {
                 namePathSaveDB = request.getParameter("oldSubmission");
             }
+            //Cập nhật thông tin tin file nộp
             Timestamp submissionDate = Timestamp.from(Instant.now());
             SubmitDAO submitDao = new SubmitDAO();
             Submission submition = new Submission(submitId, namePathSaveDB, studentID, assignmentID, submissionDate, -1);
@@ -291,7 +288,8 @@ public class StudentAssignmentController extends HttpServlet {
             System.out.println("Edit submission fail: " + e);
         }
     }
-
+    
+    //Hàm extractFileName là một phương thức giúp lấy tên gốc của tệp được tải lên từ đối tượng Part
     private String extractFileName(Part part) {
         String contentDisposition = part.getHeader("content-disposition");
         for (String cd : contentDisposition.split(";")) {
@@ -302,11 +300,6 @@ public class StudentAssignmentController extends HttpServlet {
         return null;
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";

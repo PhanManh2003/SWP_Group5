@@ -4,10 +4,10 @@
 <jsp:useBean id="getCourse" class="DAO.CourseDAO" />
 <jsp:include page="../../commonTeacher/head.jsp"></jsp:include>
 
-<div class="container">
-    <h2>List of Classes</h2>
+    <div class="container">
+        <h2>List of Classes</h2>
 
-    <!-- Display error or success message if available -->
+        <!-- Display error or success message if available -->
     <c:if test="${param.error != null}">
         <div class="alert alert-danger" role="alert">
             ${param.error}
@@ -20,32 +20,42 @@
     </c:if>
 
     <!-- Class cards layout -->
+
     <div class="row">
-        <c:forEach var="cla" items="${classes}">
-            <c:set value="${getCourse.getCourse(cla.courseID)}" var="course" />
-            <c:set value="${getTeacher.getTeacher(cla.teacherID)}" var="teacher" />
-
-            <!-- Card for each class -->
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="card-title">${cla.className}</h5>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Class ID:</strong> ${cla.classID}</p>
-                        <p><strong>Course:</strong> ${course.courseCode}</p>
-                        <p><strong>Status:</strong> ${cla.status == 1 ? 'Active' : 'Inactive'}</p>
-                        <p><strong>Semester:</strong> ${cla.semesterName}</p>
-                    </div>
-                    <div class="card-footer text-center">
-                        <!-- Action buttons -->
-                        <a href="TeacherClassController?action=view&classID=${cla.classID}" class="btn btn-info mr-2">View</a>
-                        <a href="TeacherClassController?action=add-student&classID=${cla.classID}" class="btn btn-danger">Add Student</a>
-                    </div>
+        <c:choose>
+            <c:when test="${classes == null || classes.size() == 0}">
+                <div class="alert alert-warning text-center mt-4" role="alert">
+                    <strong>Note:</strong> No classes are available at the moment. Please check back later.
                 </div>
-            </div>
-        </c:forEach>
-    </div>
-</div>
+            </c:when>
+            <c:otherwise>
+                <c:forEach var="cla" items="${classes}">
+                    <c:set value="${getCourse.getCourse(cla.courseID)}" var="course" />
+                    <c:set value="${getTeacher.getTeacher(cla.teacherID)}" var="teacher" />
 
-<%@include file="../../commonTeacher/footer.jsp" %>
+                    <!-- Card for each class -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title">${cla.className}</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Class ID:</strong> ${cla.classID}</p>
+                                <p><strong>Course:</strong> ${course.courseCode}</p>
+                                <p><strong>Status:</strong> ${cla.status == 1 ? 'Active' : 'Inactive'}</p>
+                                <p><strong>Semester:</strong> ${cla.semesterName}</p>
+                            </div>
+                            <div class="card-footer text-center">
+                                <!-- Action buttons -->
+                                <a href="TeacherClassController?action=view&classID=${cla.classID}" class="btn btn-info mr-2">View</a>
+                                <a href="TeacherClassController?action=add-student&classID=${cla.classID}" class="btn btn-danger">Add Student</a>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:otherwise>
+            </c:choose>
+            </div>
+        </div>
+
+        <%@include file="../../commonTeacher/footer.jsp" %>

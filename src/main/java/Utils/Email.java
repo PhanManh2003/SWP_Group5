@@ -18,7 +18,7 @@ import jakarta.mail.internet.MimeUtility;
 
 public class Email {
 
-    static final String username = "Company post";
+    static final String username = "FPT";
     static final String from = "letankim0602@gmail.com";
     static final String password = "eayaebdoyiohugat";
 

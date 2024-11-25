@@ -78,7 +78,7 @@
                                     </button>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="LessionStudentController?action=learn&lessionId=${course.lession.size() > 0 ? course.lession.get(0).lessionId : 0}" class="btn btn-primary mt-3">
+                                    <a href="LessonStudentController?action=learn&lessionId=${course.lession.size() > 0 ? course.lession.get(0).lessionId : 0}" class="btn btn-primary mt-3">
                                         <i class="fas fa-play-circle"></i> Continue Learning
                                     </a>
                                 </c:otherwise>

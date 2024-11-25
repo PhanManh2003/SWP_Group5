@@ -35,6 +35,7 @@ public class AssignmentDAO {
         List<Assignment> assignments = new ArrayList<>();
         String query = "SELECT * FROM Assignments where classID=?";
         try {
+            TeacherDAO teacherDao = new TeacherDAO();
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setInt(1, idClass);
             ResultSet resultSet = statement.executeQuery();
@@ -47,6 +48,7 @@ public class AssignmentDAO {
                 assignment.setClassID(resultSet.getInt("ClassID"));
                 assignment.setType(resultSet.getInt("Type"));
                 assignment.setStatus(resultSet.getInt("Status"));
+                assignment.setTeacher(teacherDao.getTeacher(resultSet.getInt("TeacherID")));
                 assignments.add(assignment);
             }
         } catch (SQLException e) {
@@ -61,6 +63,7 @@ public class AssignmentDAO {
                 + "C.ClassID = A.ClassID join Teachers as T on T.teacherID = C.TeacherId where C.TeacherId=?";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
+            TeacherDAO teacherDao = new TeacherDAO();
             statement.setInt(1, teacherId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -72,6 +75,7 @@ public class AssignmentDAO {
                 assignment.setClassID(resultSet.getInt("ClassID"));
                 assignment.setType(resultSet.getInt("Type"));
                 assignment.setStatus(resultSet.getInt("Status"));
+                assignment.setTeacher(teacherDao.getTeacher(resultSet.getInt("teacherID")));
                 assignments.add(assignment);
             }
         } catch (SQLException e) {
@@ -111,6 +115,7 @@ public class AssignmentDAO {
         String query = "SELECT * FROM Assignments where classID=? and status = 1";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
+            TeacherDAO teacherDao = new TeacherDAO();
             statement.setInt(1, idClass);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -122,6 +127,7 @@ public class AssignmentDAO {
                 assignment.setClassID(resultSet.getInt("ClassID"));
                 assignment.setType(resultSet.getInt("Type"));
                 assignment.setStatus(resultSet.getInt("Status"));
+                assignment.setTeacher(teacherDao.getTeacher(resultSet.getInt("TeacherId")));
                 assignments.add(assignment);
             }
         } catch (SQLException e) {
@@ -155,7 +161,7 @@ public class AssignmentDAO {
 //  end student
 
     public int addAssignment(Assignment assignment) {
-        String query = "INSERT INTO Assignments (Title, Description, DueDate, ClassID, Type, Status) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Assignments (Title, Description, DueDate, ClassID, Type, Status, TeacherID) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try ( PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, assignment.getTitle());
             statement.setString(2, assignment.getDescription());
@@ -163,6 +169,7 @@ public class AssignmentDAO {
             statement.setInt(4, assignment.getClassID());
             statement.setInt(5, assignment.getType());
             statement.setInt(6, assignment.getStatus());
+            statement.setInt(7, assignment.getTeacherID());
             return statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Add assignment: " + e);
@@ -214,7 +221,7 @@ public class AssignmentDAO {
     }
 
     public int updateAssignment(Assignment assignment) {
-        String query = "UPDATE Assignments SET Title = ?, Description = ?, DueDate = ?, ClassID = ?, Type = ?, Status = ? WHERE AssignmentID = ?";
+        String query = "UPDATE Assignments SET Title = ?, Description = ?, DueDate = ?, ClassID = ?, Type = ?, Status = ?, TeacherID=? WHERE AssignmentID = ?";
         try ( PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, assignment.getTitle());
             statement.setString(2, assignment.getDescription());
@@ -222,7 +229,8 @@ public class AssignmentDAO {
             statement.setInt(4, assignment.getClassID());
             statement.setInt(5, assignment.getType());
             statement.setInt(6, assignment.getStatus());
-            statement.setInt(7, assignment.getAssignmentID());
+            statement.setInt(7, assignment.getTeacherID());
+            statement.setInt(8, assignment.getAssignmentID());
             return statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Update assignment: " + e);

@@ -1,4 +1,8 @@
-
+<%-- 
+    Document   : index
+    Created on : Jun 12, 2024, 12:03:04 AM
+    Author     : HP
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
@@ -37,7 +41,7 @@
                                 <button type="submit" class="btn btn-primary btn-block">Login</button>
                                 <p class="text-center mt-3">Login with google by student and teacher</p>
                                 <a class="btn btn-danger btn-block"
-                                   href="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:8080/ManagerAssignment/LoginWithGoogleController&response_type=code
+                                   href="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:8080/Edunext/LoginWithGoogleController&response_type=code
                                    &client_id=855024682610-7me9k0ap16evk6iero8s8293i4sp7o7o.apps.googleusercontent.com&approval_prompt=force"
                                    >
                                     Login with Google

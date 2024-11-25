@@ -1,8 +1,4 @@
-<%-- 
-    Document   : assignment
-    Created on : Jun 7, 2024, 9:39:35 PM
-    Author     : HP
---%>
+
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -30,6 +26,7 @@
                         <th>Due Date</th>
                         <th>Type </th>
                         <th>Status</th>
+                        <th>Assign by</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -47,7 +44,7 @@
                                         <c:when test="${assign.type == 3}">
                                             Caption
                                         </c:when>
-                                        <c:when test="${assign.type == 3}">
+                                        <c:when test="${assign.type == 2}">
                                             Assignment
                                         </c:when>
                                         <c:otherwise>
@@ -56,9 +53,12 @@
                                     </c:choose>
                                 </span>
                             </td>
-                            <td>${assign.status == 1 ? 'Active' : 'Hidden'}</td>
+                            <td>${assign.status == 1 ? 'Active' : 'In Active'}</td>
                             <td>
-                                <a href="TeacherAssignmentController?action=submission&classID=${assign.classID}&assignmentID=${assign.assignmentID}" class="btn btn-info">Submition</a>
+                                <span class="badge badge-info">${assign.teacher != null ? assign.teacher.name : "NULL"}</span>
+                            </td>
+                            <td>
+                                <a href="TeacherAssignmentController?action=submission&classID=${assign.classID}&assignmentID=${assign.assignmentID}" class="btn btn-info">Submissions</a>
                                 <a href="TeacherAssignmentController?action=edit&assignmentID=${assign.assignmentID}" class="btn btn-warning">Edit</a>
                                 <a onclick="deleteAssignment(${assign.assignmentID}, ${assign.classID})" class="btn btn-danger">Delete</a>
                             </td>
@@ -73,7 +73,7 @@
                     return false;
                 }
                 var xhr = new XMLHttpRequest();
-                var url = "http://localhost:8080/ManagerAssignment/TeacherClassController?action=delete-assignment";
+                var url = "${pageContext.request.contextPath}/TeacherClassController?action=delete-assignment";
                 xhr.open("POST", url, true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 xhr.onreadystatechange = function () {
@@ -86,10 +86,10 @@
                                     location.reload();
                                 }, 200);
                             } else {
-                                showError("Delete fail. Try again.");
+                                alert("Delete fail. Try again.");
                             }
                         } else {
-                            showError("Delete fail. Try again.");
+                            alert("Delete fail. Try again.");
                         }
                     }
                 };

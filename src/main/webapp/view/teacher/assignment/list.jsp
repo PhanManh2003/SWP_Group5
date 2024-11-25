@@ -1,13 +1,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <jsp:useBean id="getTeacher" class="DAO.TeacherDAO" />
+<jsp:useBean id="getClass" class="DAO.ClassDAO" />
 <jsp:useBean id="getActiveAssignment" class="Utils.GetActiveAssignment" />
 <jsp:include page="../../commonTeacher/head.jsp"></jsp:include>
 
-<div class="container mt-4">
-    <h2 class="mb-4">List of Assignments</h2>
+    <div class="container mt-4">
+        <h2 class="mb-4">List of Assignments</h2>
 
-    <!-- Hiển thị thông báo lỗi hoặc thành công nếu có -->
+        <!-- Hiển thị thông báo lỗi hoặc thành công nếu có -->
     <c:if test="${param.error != null}">
         <div class="alert alert-danger" role="alert">
             ${param.error}
@@ -29,6 +30,7 @@
                 <th>Class</th>
                 <th>Type</th>
                 <th>Status</th>
+                <th>Assign by</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -38,7 +40,7 @@
                 <tr>
                     <td>${status.index + 1}</td>
                     <td>${assign.title}</td>
-                    
+
                     <!-- Due Date với badge -->
                     <td>
                         <span class="badge badge-warning">${assign.dueDate}</span>
@@ -63,15 +65,17 @@
                     <!-- Status với badge màu sắc -->
                     <td>
                         <span class="badge ${assign.status == 1 ? 'badge-success' : 'badge-secondary'}">
-                            ${assign.status == 1 ? 'Active' : 'Hidden'}
+                            ${assign.status == 1 ? 'Active' : 'In Active'}
                         </span>
                     </td>
-
+                    <td>
+                        <span class="badge badge-info">${assign.teacher != null ? assign.teacher.name : "NULL"}</span>
+                    </td>
                     <!-- Nút hành động -->
                     <td>
                         <div class="btn-group" role="group">
                             <a href="TeacherAssignmentController?action=submission&classID=${assign.classID}&assignmentID=${assign.assignmentID}" class="btn btn-info btn-sm">
-                                <i class="fas fa-file-alt"></i> Submission
+                                <i class="fas fa-file-alt"></i> Submissions
                             </a>
                             <a href="TeacherAssignmentController?action=edit&assignmentID=${assign.assignmentID}" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit"></i> Edit
@@ -102,7 +106,7 @@
         }
 
         var xhr = new XMLHttpRequest();
-        var url = "http://localhost:8080/ManagerAssignment/TeacherClassController?action=delete-assignment";
+        var url = "${pageContext.request.contextPath}/TeacherClassController?action=delete-assignment";
         xhr.open("POST", url, true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
@@ -120,7 +124,7 @@
             }
         };
 
-        xhr.send(`assignmentId=${assignmentId}&classId=${classID}`);
+        xhr.send("assignmentId=" + assignmentId + "&classId=" + classID);
     };
 </script>
 

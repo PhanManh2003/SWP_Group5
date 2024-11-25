@@ -4,7 +4,9 @@
  */
 package Controller.Admin.Student;
 
+import DAO.AdminDAO;
 import DAO.StudentDAO;
+import DAO.TeacherDAO;
 import Model.Student;
 import Utils.Validation;
 import java.io.IOException;
@@ -15,10 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author HP
- */
+
 @WebServlet(name = "EditStudentController", urlPatterns = {"/EditStudentController"})
 public class EditStudentController extends HttpServlet {
 
@@ -60,14 +59,16 @@ public class EditStudentController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Lấy về stuId
         int studentID = Integer.parseInt(request.getParameter("studentID"));
 
         StudentDAO studentDAO = new StudentDAO();
         Student student = studentDAO.getStudent(studentID);
-
+        
+        //Check điều kiện
         if (student != null) {
             request.setAttribute("student", student);
-            request.getRequestDispatcher("./admin/student/edit.jsp").forward(request, response);
+            request.getRequestDispatcher("./view/admin/student/edit.jsp").forward(request, response);
         } else {
             response.sendRedirect("ListStudentsController?error=Can not found this student");
         }
@@ -123,6 +124,16 @@ public class EditStudentController extends HttpServlet {
         StudentDAO studentDAO = new StudentDAO();
         if (studentDAO.isEmailExists(email, studentID)) {
             response.sendRedirect("EditStudentController?studentID=" + request.getParameter("studentID") + "&error=Email exist");
+            return;
+        }
+        AdminDAO adminDao = new AdminDAO();
+        if (adminDao.isEmailExists(email, 0)) {
+            response.sendRedirect("EditStudentController?studentID=" + request.getParameter("studentID") + "&error=Email is exist in system");
+            return;
+        }
+        TeacherDAO teacherDao = new TeacherDAO();
+        if (teacherDao.isEmailExists(email, 0)) {
+            response.sendRedirect("EditStudentController?studentID=" + request.getParameter("studentID") + "&error=Email is exist in sytsem");
             return;
         }
         if (studentDAO.isPhoneExists(phone, studentID)) {

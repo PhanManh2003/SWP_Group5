@@ -82,7 +82,7 @@ public class EditClassController extends HttpServlet {
             request.setAttribute("teachers", teachers);
             request.setAttribute("courses", courses);
             request.setAttribute("classInfo", classInfo);
-            request.getRequestDispatcher("./admin/class/edit.jsp").forward(request, response);
+            request.getRequestDispatcher("./view/admin/class/edit.jsp").forward(request, response);
         } else {
             response.sendRedirect("ListClassController?error=Class can not fount");
         }

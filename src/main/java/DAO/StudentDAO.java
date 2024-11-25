@@ -57,12 +57,13 @@ public class StudentDAO {
 //  end teacher
 
     public void addStudent(Student student) {
-        String query = "INSERT INTO Students (Name, Email, Phone, Status) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO Students (Name, Email, Phone, Status, AdminID) VALUES (?, ?, ?, ?, ?)";
         try ( PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, student.getName());
             statement.setString(2, student.getEmail());
             statement.setString(3, student.getPhone());
             statement.setInt(4, student.getStatus());
+            statement.setInt(5, student.getAdminID());
             statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Add student: " + e);
@@ -112,14 +113,17 @@ public class StudentDAO {
     public List<Student> getAllStudents() {
         List<Student> students = new ArrayList<>();
         String query = "SELECT * FROM Students";
+        AdminDAO adminDao = new AdminDAO();
         try ( PreparedStatement statement = conn.prepareStatement(query);  ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Student student = new Student();
+                int studentId = resultSet.getInt("StudentID");
                 student.setStudentID(resultSet.getInt("StudentID"));
                 student.setName(resultSet.getString("Name"));
                 student.setEmail(resultSet.getString("Email"));
                 student.setPhone(resultSet.getString("Phone"));
                 student.setStatus(resultSet.getInt("Status"));
+                student.setAdmin(adminDao.getAdmin(resultSet.getInt("AdminID")));
                 students.add(student);
             }
         } catch (SQLException e) {

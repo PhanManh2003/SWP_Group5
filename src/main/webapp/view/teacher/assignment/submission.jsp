@@ -59,7 +59,15 @@
             ${param.success}
         </div>
     </c:if>
-
+    <c:choose>
+        
+    
+<c:when test="${submissions == null || submissions.size() == 0}">
+            <div class="alert alert-warning" role="alert">
+                <strong>Note:</strong> No submissions available for this assignment.
+            </div>
+        </c:when>
+<c:otherwise>
     <table class="table table-bordered" id="data-table">
         <thead>
             <tr>
@@ -71,13 +79,7 @@
             </tr>
         </thead>
         <tbody>
-            <c:if test="${submissions.size() == 0}">
-                <tr>
-                    <td colspan="5" class="text-center">
-                        <span class="badge badge-secondary">No submissions for this assignment</span>
-                    </td>
-                </tr>
-            </c:if>
+            
             <c:forEach items="${submissions}" var="submit" varStatus="status">
                 <tr>
                     <td>${status.index + 1}</td>
@@ -116,6 +118,8 @@
             </c:forEach>
         </tbody>
     </table>
+    </c:otherwise>
+        </c:choose>
 </div>
 
 <%@include file="../../commonTeacher/footer.jsp" %>

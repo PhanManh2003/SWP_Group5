@@ -24,21 +24,10 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- *
- * @author HP
- */
+
 public class TeacherClassController extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+  
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -56,15 +45,7 @@ public class TeacherClassController extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -83,10 +64,13 @@ public class TeacherClassController extends HttpServlet {
             switch (action) {
                 case "view":
                     try {
+                    //Lấy classId
                     String classId = request.getParameter("classID");
                     int classIdIn = Integer.parseInt(classId);
+                    //Check class đủ đk
                     ClassInfo currentClass = classDao.getClasseActiveByTeacherById(classIdIn);
                     if (currentClass != null) {
+                        //Lấy student dựa vào class
                         StudentDAO studentDao = new StudentDAO();
                         List<Student> students = studentDao.getAllStudentsByClass(classIdIn);
                         request.setAttribute("students", students);

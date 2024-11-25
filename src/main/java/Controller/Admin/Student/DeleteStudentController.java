@@ -14,10 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-/**
- *
- * @author HP
- */
+
 public class DeleteStudentController extends HttpServlet {
 
     /**
@@ -58,15 +55,18 @@ public class DeleteStudentController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Check điều kiện login
         HttpSession session = request.getSession();
         if (session.getAttribute("adminLogin") == null) {
             response.sendRedirect("LoginController?error=Your account can not login here");
             return;
         }
+        //Lấy về dữ liệu stu dựa vào Id
         int studentID = Integer.parseInt(request.getParameter("studentID"));
         StudentDAO studentDAO = new StudentDAO();
         Student student = studentDAO.getStudent(studentID);
-
+        
+        //Thực hiện xóa Stu
         if (student != null) {
             int result = studentDAO.deleteStudent(studentID);
             if (result > 0) {

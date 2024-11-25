@@ -27,25 +27,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-/**
- *
- * @author HP
- */
 public class TeacherAssignmentController extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -59,15 +46,6 @@ public class TeacherAssignmentController extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -121,9 +99,13 @@ public class TeacherAssignmentController extends HttpServlet {
                     }
                     break;
                 case "submission":
+                    //Lấy asgId 
                     String assignmentIDViewSubmit = request.getParameter("assignmentID").trim();
+                    //Kiểm tra asgId hợp lệ số nguyên
                     if (assignmentIDViewSubmit != null && assignmentIDViewSubmit.matches("\\d+")) {
                         try {
+                            //Lấy thông tin bài tập từ csdl
+                            //Kiểm tra quyền truy cập giáo viên
                             int assignmentIdNumber = Integer.parseInt(assignmentIDViewSubmit);
                             Assignment assignment = assignmentDao.getAssignmentByTeacher(assignmentIdNumber, teacherLogin.getTeacherID());
                             if (assignment != null) {
@@ -142,15 +124,20 @@ public class TeacherAssignmentController extends HttpServlet {
                     }
                     break;
                 case "grade":
+                    //Lấy submitId gv cần xem
                     String submitId = request.getParameter("submitID").trim();
                     if (submitId != null && submitId.matches("\\d+")) {
+
                         try {
+                            //Lấy thông tin bài nộp từ csdl
                             int submitIdNumber = Integer.parseInt(submitId);
                             Submission submitCurrent = submitDao.getSubmissionsBySubmitId(submitIdNumber);
                             if (submitCurrent == null) {
                                 response.sendRedirect("TeacherClassController?error=Can not found this submisstion");
                                 return;
                             }
+                            //Lấy thông tin bài nộp từ csdl dựa trên id bài nộp
+                            //Đảm bảo id có quyền truy cập
                             Assignment assignment = assignmentDao.getAssignmentByTeacher(submitCurrent.getAssignmentID(), teacherLogin.getTeacherID());
                             if (assignment != null) {
                                 request.setAttribute("submission", submitCurrent);
@@ -177,14 +164,6 @@ public class TeacherAssignmentController extends HttpServlet {
         }
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -215,17 +194,22 @@ public class TeacherAssignmentController extends HttpServlet {
 
     private void gradeSubmission(HttpServletRequest request, HttpServletResponse response) {
         try {
+            //Lấy về asgId và subId
             String submissionID = request.getParameter("submissionID").trim();
             String assignmentID = request.getParameter("assignmentID").trim();
             String classID = request.getParameter("classID").trim();
             try {
-                int submissionIDNumber = Integer.parseInt(submissionID);
-                float grade = Float.parseFloat(request.getParameter("grade"));
+
+                int submissionIDNumber = Integer.parseInt(submissionID); //subId số nguyên
+                float grade = Float.parseFloat(request.getParameter("grade")); //grade thành kiểu float
+
                 if (grade > 10 || grade < 0) {
                     throw new Exception("Error");
                 }
+                //Cập nhật csdl
                 SubmitDAO submitDao = new SubmitDAO();
                 boolean isGrade = submitDao.updateGrade(grade, submissionIDNumber);
+                //Thông báo grade thành công or fail
                 if (isGrade) {
                     response.sendRedirect("TeacherAssignmentController?action=submission&classID=" + classID + "&assignmentID=" + assignmentID + "&success=Grade successfully");
                 } else {
@@ -241,6 +225,14 @@ public class TeacherAssignmentController extends HttpServlet {
 
     private void addAssignment(HttpServletRequest request, HttpServletResponse response) {
         try {
+            HttpSession session = request.getSession();
+            int idTeacher = session.getAttribute("teacherID") == null ? -1 : (int) session.getAttribute("teacherID");
+            TeacherDAO teacherDAO = new TeacherDAO();
+            Teacher teacherLogin = teacherDAO.getTeacher(idTeacher);
+            if (session.getAttribute("teacherID") == null || teacherLogin == null) {
+                response.sendRedirect("LoginController?error=Your account can not login here");
+                return;
+            }
             String classID = request.getParameter("classID").trim();
             String title = request.getParameter("title").trim();
             String desc = request.getParameter("desc").trim();
@@ -287,6 +279,7 @@ public class TeacherAssignmentController extends HttpServlet {
                         int type = Integer.parseInt(typeString);
                         int status = Integer.parseInt(statusString);
                         Assignment ass = new Assignment(0, title, desc, dueDate, classIdNumber, type, status);
+                        ass.setTeacherID(idTeacher);
                         int result = assignmentDao.addAssignment(ass);
                         if (result > 0) {
                             response.sendRedirect("TeacherClassController?action=assignment&classID=" + classIdNumber + "&success=Add assignment successfully");
@@ -315,6 +308,14 @@ public class TeacherAssignmentController extends HttpServlet {
 
     private void editAssignment(HttpServletRequest request, HttpServletResponse response) {
         try {
+             HttpSession session = request.getSession();
+            int idTeacher = session.getAttribute("teacherID") == null ? -1 : (int) session.getAttribute("teacherID");
+            TeacherDAO teacherDAO = new TeacherDAO();
+            Teacher teacherLogin = teacherDAO.getTeacher(idTeacher);
+            if (session.getAttribute("teacherID") == null || teacherLogin == null) {
+                response.sendRedirect("LoginController?error=Your account can not login here");
+                return;
+            }
             String assignmentID = request.getParameter("assignmentID").trim();
             String classID = request.getParameter("classID").trim();
             String title = request.getParameter("title").trim();
@@ -383,6 +384,7 @@ public class TeacherAssignmentController extends HttpServlet {
                 return;
             }
             Assignment assignment = new Assignment(assignmentIdNumber, title, desc, dueDate, classIdNumber, type, status);
+            assignment.setTeacherID(idTeacher);
             int result = assignmentDao.updateAssignment(assignment);
             if (result > 0) {
                 response.sendRedirect("TeacherClassController?action=assignment&classID=" + classIdNumber + "&success=Assignment updated successfully");

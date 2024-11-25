@@ -5,6 +5,7 @@
 package Controller.Admin.Semester;
 
 import DAO.SemesterDAO;
+import Model.Admin;
 import Model.Semester;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
@@ -60,7 +62,13 @@ public class AddSemesterController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/semester/add.jsp");
+        HttpSession session = request.getSession();
+        Admin admin = (Admin)session.getAttribute("adminLogin");
+        if (admin == null) {
+            response.sendRedirect("LoginController?error=Your account can not login here");
+            return;
+        }
+        RequestDispatcher dispatcher = request.getRequestDispatcher("./view/admin/semester/add.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -75,13 +83,19 @@ public class AddSemesterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Admin admin = (Admin)session.getAttribute("adminLogin");
+        if (admin == null) {
+            response.sendRedirect("LoginController?error=Your account can not login here");
+            return;
+        }
         String semesterName = request.getParameter("semesterName").trim();
         String yearStr = request.getParameter("year").trim();
         String statusStr = request.getParameter("status").trim();
 
         if (semesterName == null || semesterName.isEmpty() || yearStr == null || yearStr.isEmpty() || statusStr == null || statusStr.isEmpty()) {
             request.setAttribute("errorMessage", "All fields are required.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/semester/add.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./view/admin/semester/add.jsp");
             dispatcher.forward(request, response);
             return;
         }
@@ -93,7 +107,7 @@ public class AddSemesterController extends HttpServlet {
             year = Integer.parseInt(yearStr);
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Year must be a valid number.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/semester/add.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./view/admin/semester/add.jsp");
             dispatcher.forward(request, response);
             return;
         }
@@ -102,7 +116,7 @@ public class AddSemesterController extends HttpServlet {
             status = Integer.parseInt(statusStr);
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Status must be a valid number.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/semester/add.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./view/admin/semester/add.jsp");
             dispatcher.forward(request, response);
             return;
         }
@@ -110,13 +124,14 @@ public class AddSemesterController extends HttpServlet {
 
         if (semesterDAO.getSemesterName(semesterName, 0)) {
             request.setAttribute("errorMessage", "Name semester is exist in system.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/semester/add.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("./view/admin/semester/add.jsp");
             dispatcher.forward(request, response);
             return;
         }
 
         Semester semester = new Semester();
         semester.setSemesterName(semesterName);
+        semester.setAdminID(admin.getId());
         semester.setYear(year);
         semester.setStatus(status);
 

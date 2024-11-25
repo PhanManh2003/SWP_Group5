@@ -8,6 +8,7 @@ import DAO.ClassDAO;
 import DAO.CourseDAO;
 import DAO.SemesterDAO;
 import DAO.TeacherDAO;
+import Model.Admin;
 import Model.ClassInfo;
 import Model.Course;
 import Model.Semester;
@@ -19,6 +20,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -65,6 +67,11 @@ public class AddClassController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        if (session.getAttribute("adminLogin") == null) {
+            response.sendRedirect("LoginController?error=Your account can not login here");
+            return;
+        }
         TeacherDAO teacherDAO = new TeacherDAO();
         CourseDAO courseDAO = new CourseDAO();
         SemesterDAO semesterDAO = new SemesterDAO();
@@ -77,7 +84,7 @@ public class AddClassController extends HttpServlet {
         request.setAttribute("teachers", teachers);
         request.setAttribute("courses", courses);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/class/add.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("./view/admin/class/add.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -92,6 +99,12 @@ public class AddClassController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Admin admin = (Admin)session.getAttribute("adminLogin");
+        if (admin == null) {
+            response.sendRedirect("LoginController?error=Your account can not login here");
+            return;
+        }
         String className = request.getParameter("className");
         int status = Integer.parseInt(request.getParameter("status"));
         int teacherID = Integer.parseInt(request.getParameter("teacherID"));
@@ -115,7 +128,7 @@ public class AddClassController extends HttpServlet {
         classInfo.setTeacherID(teacherID);
         classInfo.setCourseID(courseID);
         classInfo.setSemesterID(semesterID);
-
+        classInfo.setAdminID(admin.getId());
         int result = classDao.addClass(classInfo);
 
         if (result > 0) {

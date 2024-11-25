@@ -63,7 +63,7 @@ public class ListClassController extends HttpServlet {
         ClassDAO classDao = new ClassDAO();
         List<ClassInfo> classInfo = classDao.getClasses();
         request.setAttribute("classes", classInfo);
-        request.getRequestDispatcher("./admin/class/list.jsp").forward(request, response);
+        request.getRequestDispatcher("./view/admin/class/list.jsp").forward(request, response);
     }
 
     /**

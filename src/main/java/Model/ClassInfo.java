@@ -17,6 +17,9 @@ public class ClassInfo {
     private int semesterID;
     private int courseID;
     private String semesterName;
+    private boolean canDelete;
+    private int adminID;
+    private Admin admin;
 
     public ClassInfo() {
     }
@@ -84,5 +87,29 @@ public class ClassInfo {
 
     public void setSemesterName(String semesterName) {
         this.semesterName = semesterName;
+    }
+
+    public boolean isCanDelete() {
+        return canDelete;
+    }
+
+    public void setCanDelete(boolean canDelete) {
+        this.canDelete = canDelete;
+    }
+
+    public int getAdminID() {
+        return adminID;
+    }
+
+    public void setAdminID(int adminID) {
+        this.adminID = adminID;
+    }
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
     }
 }

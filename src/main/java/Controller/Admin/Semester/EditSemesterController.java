@@ -64,7 +64,7 @@ public class EditSemesterController extends HttpServlet {
         SemesterDAO semesterDAO = new SemesterDAO();
         Semester semester = semesterDAO.getSemester(semesterID);
         request.setAttribute("semester", semester);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("./admin/semester/update.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("./view/admin/semester/update.jsp");
         dispatcher.forward(request, response);
     }
 

@@ -19,6 +19,8 @@ public class Assignment {
     private int classID;
     private int type;
     private int status;
+    private int teacherID;
+    private Teacher teacher;
 
     public Assignment() {
     }
@@ -88,6 +90,20 @@ public class Assignment {
     public void setStatus(int status) {
         this.status = status;
     }
-    
-    
+
+    public int getTeacherID() {
+        return teacherID;
+    }
+
+    public void setTeacherID(int teacherID) {
+        this.teacherID = teacherID;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
 }

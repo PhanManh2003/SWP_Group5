@@ -21,7 +21,7 @@
     <c:choose>
         <c:when test="${studentJoin != null && studentJoin.status == 1}">
             <a href="StudentClassController?action=assignment&classID=${currentClass.classID}" class="btn btn-info mb-3">View Assignment</a>
-            <a href="LessionStudentController?classID=${currentClass.classID}" class="btn btn-warning mb-3">Go to course</a>
+            <a href="LessonStudentController?classID=${currentClass.classID}" class="btn btn-warning mb-3">Go to course</a>
         </c:when>
         <c:when test="${studentJoin != null && studentJoin.status == 0}">
             <a class="btn btn-primary mb-3">Waiting for Approval</a>

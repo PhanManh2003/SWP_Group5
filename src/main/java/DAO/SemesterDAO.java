@@ -30,11 +30,12 @@ public class SemesterDAO {
     }
 
     public void addSemester(Semester semester) {
-        String query = "INSERT INTO Semesters (SemesterName, Year, Status) VALUES (?, ?, ?)";
+        String query = "INSERT INTO Semesters (SemesterName, Year, Status, AdminID) VALUES (?,?, ?, ?)";
         try ( PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, semester.getSemesterName());
             statement.setInt(2, semester.getYear());
             statement.setInt(3, semester.getStatus());
+            statement.setInt(4, semester.getAdminID());
             statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Add semester: " + e);
@@ -104,6 +105,8 @@ public class SemesterDAO {
     public List<Semester> getAllSemesters() {
         List<Semester> semesters = new ArrayList<>();
         String query = "SELECT * FROM Semesters";
+        ClassDAO classDao = new ClassDAO();
+        AdminDAO adminDao = new AdminDAO();
         try ( PreparedStatement statement = conn.prepareStatement(query);  ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Semester semester = new Semester();
@@ -111,6 +114,9 @@ public class SemesterDAO {
                 semester.setSemesterName(resultSet.getString("SemesterName"));
                 semester.setYear(resultSet.getInt("Year"));
                 semester.setStatus(resultSet.getInt("Status"));
+                //Semester đang được sử dụng bởi class
+                semester.setCanDelete(!classDao.getCheckClassBySemesterID(resultSet.getInt("SemesterID")));
+                semester.setAdmin(adminDao.getAdmin(resultSet.getInt("AdminID")));
                 semesters.add(semester);
             }
         } catch (SQLException e) {

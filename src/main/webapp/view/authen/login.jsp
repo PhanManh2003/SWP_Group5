@@ -39,10 +39,10 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="breadcrumb__content">
-                                <h3 class="title">Student Login</h3>
+                                <h3 class="title">Login FPT Course</h3>
                                 <nav class="breadcrumb">
                                     <span property="itemListElement" typeof="ListItem">
-                                        <a href="index.html">Home</a>
+                                        <a href="home">Home</a>
                                     </span>
                                     <span class="breadcrumb-separator"><i class="fas fa-angle-right"></i></span>
                                     <span property="itemListElement" typeof="ListItem">Login</span>
@@ -70,9 +70,15 @@
                                 <h2 class="title">Welcome back!</h2>
                                 <p>Hey there! Ready to log in? Just enter your username and password below and you'll be back in action in no time. Let's go!</p>
                                 <div class="account__social">
-                                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:9998/SWP_OCMS/LoginGoogleHandler&response_type=code&client_id=257748132214-9811944a5anccchj9egqhg9qci33l5ij.apps.googleusercontent.com&approval_prompt=force" class="account__social-btn">
-                                        <img src="${pageContext.request.contextPath}/assets/img/icons/google.svg" alt="img">
-                                        Continue with google
+                                    <!--                                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:9998/SWP_OCMS/LoginGoogleHandler&response_type=code&client_id=257748132214-9811944a5anccchj9egqhg9qci33l5ij.apps.googleusercontent.com&approval_prompt=force" class="account__social-btn">
+                                                                            <img src="${pageContext.request.contextPath}/assets/img/icons/google.svg" alt="img">
+                                                                            Continue with google
+                                                                        </a>-->
+                                    <a class="btn btn-danger btn-block"
+                                  href="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:9998/Edunext/LoginWithGoogleController&response_type=code
+                                   &client_id=674101808477-pfjhts684603dph0duh4imc92iu1evfr.apps.googleusercontent.com"
+                                   >
+                                        Login with Google
                                     </a>
                                 </div>
                                 <div class="account__divider">
@@ -101,7 +107,7 @@
                                             <label for="terms-check" class="form-check-label">Remember me</label>
                                         </div>
                                         <div class="account__check-forgot">
-                                            <a href="authen?action=enter-email">Forgot Password?</a>
+                                            <a href="AdminForgetPasswordController">Forgot Password?</a>
                                         </div>
                                     </div>
                                 </form>

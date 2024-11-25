@@ -55,15 +55,7 @@ public class StudentClassController extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+   
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -130,13 +122,16 @@ public class StudentClassController extends HttpServlet {
                    try {
                     String classId = request.getParameter("classID");
                     int classIdIn = Integer.parseInt(classId);
+                    //Tìm kiếm lớp học active thông qua class id
                     ClassInfo currentClass = classDao.getClasseActiveByTeacherById(classIdIn);
                     if (currentClass != null) {
+                        // Kiểm tra xem học sinh thuộc class
                         StudentClass studentClass = studentClassDao.getStudentsByClassIdAndStudent(classIdIn, studentId);
                         if (studentClass == null) {
                             response.sendRedirect("StudentClassController?error=You not join this class");
                             return;
                         }
+                    //Lấy danh sách các bài tập đang hoạt động của class
                         AssignmentDAO assignmentDao = new AssignmentDAO();
                         List<Assignment> assignments = assignmentDao.getAllAssignmentsByClassIdActive(classIdIn);
                         request.setAttribute("assignments", assignments);
@@ -156,7 +151,9 @@ public class StudentClassController extends HttpServlet {
                     request.getRequestDispatcher("./view/student/class/class.jsp").forward(request, response);
                     break;
                 default:
-                    List<ClassInfo> classInfors = classDao.getAllClassesActive();
+                    String searchQuery = request.getParameter("searchQuery");
+                    List<ClassInfo> classInfors = classDao.getAllClassesActiveSearch(searchQuery);
+                    request.setAttribute("searchQuery", searchQuery);
                     request.setAttribute("classInfors", classInfors);
                     request.getRequestDispatcher("./view/student/class/class.jsp").forward(request, response);
                     break;

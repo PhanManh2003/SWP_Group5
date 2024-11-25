@@ -95,7 +95,8 @@ public class StudentClassDAO {
         }
         return studentList;
     }
-
+    
+    //Lấy student dựa trên classID và StudentID
     public StudentClass getStudentsByClassIdAndStudent(int classId, int studentId) throws SQLException {
         String query = "SELECT * FROM studentClass WHERE classId = ? and StudentId=?";
 

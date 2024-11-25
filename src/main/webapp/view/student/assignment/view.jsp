@@ -1,8 +1,4 @@
-<%-- 
-    Document   : view
-    Created on : Jun 11, 2024, 12:10:20 PM
-    Author     : HP
---%>
+
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -34,6 +30,10 @@
                     ${param.success}
                 </div>
             </c:if>
+            <div class="alert alert-warning mt-3">
+    <strong>Important:</strong> Please ensure to keep a copy of your submission on your device. ZIP files submitted will be stored and cannot be accessed or deleted until the end of the course.
+</div>
+
             <table class="table table-bordered" id="data-table">
                 <thead>
                     <tr>
@@ -68,10 +68,10 @@
                             </td>
                             <td>Active</td>
                             <td>
-                                <a href="StudentClassController?action=submit&classID=${assign.classID}" class="btn btn-info">Submition</a>
+                                <a href="StudentClassController?action=submit&classID=${assign.classID}" class="btn btn-info">Submissions</a>
 
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#descriptionModal${status.index}">
-                                    Xem chi tiết
+                                    View details
                                 </button>
                             </td>
                         </tr>
@@ -79,7 +79,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="descriptionModalLabel${status.index}">Mô tả Assignment</h5>
+                                    <h5 class="modal-title" id="descriptionModalLabel${status.index}">Description Assignment</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -88,7 +88,7 @@
                                     ${assign.description}
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>

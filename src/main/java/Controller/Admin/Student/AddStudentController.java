@@ -4,8 +4,10 @@
  */
 package Controller.Admin.Student;
 
+import DAO.AdminDAO;
 import DAO.StudentDAO;
 import DAO.TeacherDAO;
+import Model.Admin;
 import Model.Student;
 import Utils.Validation;
 import java.io.IOException;
@@ -15,11 +17,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-/**
- *
- * @author HP
- */
 @WebServlet(name = "AddStudentController", urlPatterns = {"/AddStudentController"})
 public class AddStudentController extends HttpServlet {
 
@@ -49,36 +48,35 @@ public class AddStudentController extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("./admin/teacher/add.jsp").forward(request, response);
+        HttpSession session = request.getSession();
+        Admin admin = (Admin)session.getAttribute("adminLogin");
+        if (admin == null) {
+            response.sendRedirect("LoginController?error=Your account can not login here");
+            return;
+        }
+        request.getRequestDispatcher("./view/admin/student/student.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+  
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //Lấy về dữ liệu
+        HttpSession session = request.getSession();
+        Admin admin = (Admin)session.getAttribute("adminLogin");
+        if (admin == null) {
+            response.sendRedirect("LoginController?error=Your account can not login here");
+            return;
+        }
         String name = request.getParameter("name").trim();
         String email = request.getParameter("email").trim();
         String phone = request.getParameter("phone").trim();
         String statusStr = request.getParameter("status").trim();
-
+        
+        //Check điều kiện nhập dữ liệu
         if (name == null || email == null || phone == null || statusStr == null
                 || name.isEmpty() || email.isEmpty() || phone.isEmpty() || statusStr.isEmpty()) {
             response.sendRedirect("AddStudentController?error=Please fill all field");
@@ -107,16 +105,28 @@ public class AddStudentController extends HttpServlet {
             response.sendRedirect("AddStudentController?error=Email is exist");
             return;
         }
+        AdminDAO adminDao = new AdminDAO();
+        if (adminDao.isEmailExists(email, 0)) {
+            response.sendRedirect("AddStudentController?error=Email is exist in system");
+            return;
+        }
+        TeacherDAO teacherDao = new TeacherDAO();
+        if (teacherDao.isEmailExists(email, 0)) {
+            response.sendRedirect("AddStudentController?error=Email is exist in system");
+            return;
+        }
         if (studentDAO.isPhoneExists(phone, 0)) {
             response.sendRedirect("AddStudentController?error=Phone is exist");
             return;
         }
-
+        
+        //Nhập stu vào csdl
         Student student = new Student();
         student.setName(name);
         student.setEmail(email);
         student.setPhone(phone);
         student.setStatus(status);
+        student.setAdminID(admin.getId());
 
         studentDAO.addStudent(student);
 

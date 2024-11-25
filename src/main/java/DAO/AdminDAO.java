@@ -28,10 +28,10 @@ public class AdminDAO {
             System.out.println("Connection fail: " + e);
         }
     }
-    
-     public Admin adminForget(String email) {
+
+    public Admin adminForget(String email) {
         String query = "SELECT * FROM Admin WHERE email = ?";
-        try ( PreparedStatement statement = conn.prepareStatement(query)) {
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -50,9 +50,25 @@ public class AdminDAO {
         return null;
     }
 
+    public boolean updateAvatar(String avatar, int id) {
+        String query = "UPDATE Admin SET avatar = ? WHERE id = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, avatar);
+            statement.setInt(6, id);
+
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            System.out.println("Update admin error: " + e);
+        }
+
+        return false;
+    }
+
     public Admin adminLogin(String email, String password) {
         String query = "SELECT * FROM Admin WHERE email = ? and password=?";
-        try ( PreparedStatement statement = conn.prepareStatement(query)) {
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, email);
             statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
@@ -74,7 +90,7 @@ public class AdminDAO {
 
     public Admin getAdmin(int id) {
         String query = "SELECT * FROM Admin WHERE id = ?";
-        try ( PreparedStatement statement = conn.prepareStatement(query)) {
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -96,7 +112,7 @@ public class AdminDAO {
     public List<Admin> getAllAdmin() {
         List<Admin> admins = new ArrayList<>();
         String query = "SELECT * FROM Admin";
-        try ( PreparedStatement statement = conn.prepareStatement(query);  ResultSet resultSet = statement.executeQuery()) {
+        try (PreparedStatement statement = conn.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Admin admin = new Admin();
                 admin.setId(resultSet.getInt("id"));
@@ -115,7 +131,7 @@ public class AdminDAO {
 
     public int addAdmin(Admin admin) {
         String query = "INSERT INTO Admin (email, phone, password, status, name) VALUES (?, ?, ?, ?, ?)";
-        try ( PreparedStatement statement = conn.prepareStatement(query)) {
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, admin.getEmail());
             statement.setString(2, admin.getPhone());
             statement.setString(3, admin.getPassword());
@@ -127,10 +143,10 @@ public class AdminDAO {
         }
         return 0;
     }
-    
+
     public int updatePassword(String password, int id) {
         String query = "UPDATE Admin SET password=? WHERE id = ?";
-        try ( PreparedStatement statement = conn.prepareStatement(query)) {
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, password);
             statement.setInt(2, id);
             return statement.executeUpdate();
@@ -142,7 +158,7 @@ public class AdminDAO {
 
     public int updateAdmin(Admin admin) {
         String query = "UPDATE Admin SET email = ?, phone = ?, password=?, status = ?, name=? WHERE id = ?";
-        try ( PreparedStatement statement = conn.prepareStatement(query)) {
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, admin.getEmail());
             statement.setString(2, admin.getPhone());
             statement.setString(3, admin.getPassword());
@@ -162,7 +178,7 @@ public class AdminDAO {
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, email);
             statement.setInt(2, id);
-            try ( ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet = statement.executeQuery()) {
                 return resultSet.next();
             }
         } catch (SQLException e) {
@@ -177,7 +193,7 @@ public class AdminDAO {
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, phone);
             statement.setInt(2, id);
-            try ( ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet = statement.executeQuery()) {
                 return resultSet.next();
             }
         } catch (SQLException e) {
@@ -188,7 +204,7 @@ public class AdminDAO {
 
     public int deleteAdmin(int adminId) {
         String query = "DELETE FROM Admin WHERE id = ?";
-        try ( PreparedStatement statement = conn.prepareStatement(query)) {
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setInt(1, adminId);
             return statement.executeUpdate();
         } catch (SQLException e) {
